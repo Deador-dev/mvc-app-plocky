@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link th:href="@{/css/custome.css}" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://kit.fontawesome.com/88ccb28af8.js" crossorigin="anonymous"></script>
+    <title>Plocky view product</title>
+</head>
+<body style="background-color: #F4F4F9">
+
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-custome">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" th:href="@{/shop}">
+            <img th:src="@{/images/logo.svg}" src="../static/images/logo.svg" width="auto" height="80"
+                 class="d-inline-block align-top" alt=""/>
+            <span class="navbar-name">PLOCKY</span>
+        </a>
+
+        <form action="#" method="get"
+              th:action="@{'http://localhost:8080/search/page/1'}">
+            <input class="search-input" type="text" name="keyword" placeholder="I'm looking for..."/>
+            <input type="hidden" name="sortField" th:value="id">
+            <input type="hidden" name="sortDir" th:value="desc">
+            <button class="button-search" type="submit">
+                <i class="bi bi-search button-search-icon"></i>
+            </button>
+        </form>
+
+        <button class="navbar-toggler navbar-button-menu" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav navbar-nav-custome">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/personalCabinet}" href="#"><i
+                            class="bi bi-person-fill navbar-icons"></i></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link nav-link-cart" th:href="@{/cart}" href="#"><i
+                            class="bi bi-basket2-fill navbar-icons"></i></a>
+                </li>
+                <li class="nav-item active">
+                    <span class="nav-link navbar-custome-count nav-cart-number" th:text="${cartCount}">0</span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-sm-5 d-flex justify-content-center view-product-image">
+            <img class="view-product-one" src="" th:src="@{${'/productImages/' + product.imageName}}"
+                 alt="">
+        </div>
+        <div class="col-sm-7 view-product-container">
+            <div class="view-product-title-container">
+                <h2 th:text="${product.name}" class="view-product-title"></h2>
+                <h2 class="view-product-title-price">$ <span th:text="${product.price}"></span></h2>
+                <div class="view-product-count-of-view"><i class="bi bi-eye"></i><span th:text="${product.countOfViews}" class="view-product-count-of-view-number">0</span></div>
+            </div>
+            <div class="view-product-buttons">
+                <a href="" th:href="@{/buyNow/{id}(id = ${product.id})}" class="view-product-button-buy-now">Buy
+                    Now</a>
+                <a href="" th:href="@{/addToCart/{id}(id = ${product.id})}"
+                   class="view-product-button-add-to-cart">Add to cart</a>
+            </div>
+            <div class="view-product-about-this-item-container">
+                <div class="view-product-about-this-item-container-title">
+                    About this item
+                </div>
+
+                <div class="view-product-about-this-item-container-inf">
+                    <div class="view-product-about-this-item-container-inf-left">
+                        <h2 class="view-product-about-this-item-container-inf-title">General</h2>
+                        <span class="view-product-about-this-item-container-inf-text-left">Brand</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Model</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Operating System</span>
+                        <h2 class="view-product-about-this-item-container-inf-title">Display</h2>
+                        <span class="view-product-about-this-item-container-inf-text-left">Screen Size</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Display Resolution</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Matrix Type</span>
+                        <h2 class="view-product-about-this-item-container-inf-title">Productivity</h2>
+                        <span class="view-product-about-this-item-container-inf-text-left">Processor</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Number of Cores</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Battery</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">RAM</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Storage Capacity</span>
+                        <h2 class="view-product-about-this-item-container-inf-title">Camera & Video</h2>
+                        <span class="view-product-about-this-item-container-inf-text-left">Number of Main Cameras</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Main Camera Resolution</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Number of Front Cameras</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Front Camera Resolution</span>
+                        <h2 class="view-product-about-this-item-container-inf-title">Other</h2>
+                        <span class="view-product-about-this-item-container-inf-text-left">Number of SIM cards</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Connectivity</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Bluetooth</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">NFC</span>
+                        <span class="view-product-about-this-item-container-inf-text-left">Weight</span>
+                    </div>
+                    <div class="view-product-about-this-item-container-inf-right">
+                        <h2 class="view-product-about-this-item-container-inf-title">⠀</h2>
+                        <span th:text="${product.brand}" class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.model}" class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.operatingSystem}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span class="view-product-about-this-item-container-inf-text-right">⠀</span>
+                        <span th:text="${product.screenSize}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.displayResolution}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.matrixType}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span class="view-product-about-this-item-container-inf-text-right">⠀</span>
+                        <span th:text="${product.processor}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.numberOfCores}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.battery + ' mAh'}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.ram + ' GB'}" class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.storageCapacity + ' GB'}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span class="view-product-about-this-item-container-inf-text-right">⠀</span>
+                        <span th:text="${product.numberOfMainCameras}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.mainCameraResolution + ' MP'}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.numberOfFrontCameras}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.frontCameraResolution + ' MP'}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span class="view-product-about-this-item-container-inf-text-right">⠀</span>
+                        <span th:text="${product.numberOfSimCards}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.connectivity}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.bluetooth}"
+                              class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.nfc}" class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                        <span th:text="${product.weight}" class="view-product-about-this-item-container-inf-text-right">Unknown</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-light footer">
+    <div class="footer-social-networks">
+        <div class="footer-social-networks-title">Social networks</div>
+        <div class="footer-social-networks-icons">
+            <a><i class="fa-brands fa-viber footer-icon"></i></a>
+            <a><i class="fa-brands fa-telegram footer-icon"></i></a>
+            <a><i class="fa-brands fa-instagram-square footer-icon"></i></a>
+        </div>
+    </div>
+    <div class="footer-phones">
+        <span class="footer-phones-title">Phones</span>
+        <span class="footer-phones-info">+380980147658</span>
+        <span class="footer-phones-info">+380930204778</span>
+    </div>
+    <div class="footer-email">
+        <span class="footer-email-title">Email</span>
+        <span class="footer-email-info">inkohnito4@gmail.com</span>
+    </div>
+</nav>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link th:href="@{/css/custome.css}" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <title>Plocky personal cabinet</title>
+</head>
+<body style="background-color: #F4F4F9">
+
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-custome">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" th:href="@{/shop}">
+            <img th:src="@{/images/logo.svg}" src="../static/images/logo.svg" width="auto" height="80"
+                 class="d-inline-block align-top" alt=""/>
+            <span class="navbar-name">PLOCKY</span>
+        </a>
+
+        <form action="#" method="get"
+              th:action="@{'http://localhost:8080/search/page/1'}">
+            <input class="search-input" type="text" name="keyword" placeholder="I'm looking for..."/>
+            <input type="hidden" name="sortField" th:value="id">
+            <input type="hidden" name="sortDir" th:value="desc">
+            <button class="button-search" type="submit">
+                <i class="bi bi-search button-search-icon"></i>
+            </button>
+        </form>
+
+        <button class="navbar-toggler navbar-button-menu" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav navbar-nav-custome">
+                <li class="nav-item active">
+                    <a class="nav-link nav-link-cart" th:href="@{/cart}" href="#"><i
+                            class="bi bi-basket2-fill navbar-icons"></i></a>
+                </li>
+                <li class="nav-item active nav-cart-number">
+                    <span class="nav-link navbar-custome-count" th:text="${cartCount}">0</span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+
+<div class="container mt-5">
+    <div class="row">
+
+
+        <div class="personal-cabinet-user">
+            <div class="personal-cabinet-user-title"><p>Personal data</p></div>
+            <div class="personal-cabinet-user-container">
+                <div class="personal-cabinet-user-info">
+                    <div class="personal-cabinet-user-small personal-cabinet-user-left">First name</div>
+                    <span sec:authentication="principal.firstName"
+                          class="personal-cabinet-user-detail personal-cabinet-user-right">First name</span>
+                </div>
+                <div class="personal-cabinet-user-info">
+                    <div class="personal-cabinet-user-small personal-cabinet-user-left">Last name</div>
+                    <span sec:authentication="principal.lastName"
+                          class="personal-cabinet-user-detail personal-cabinet-user-right">Last name</span>
+                </div>
+
+                <div class="personal-cabinet-user-info">
+                    <div class="personal-cabinet-user-small-email personal-cabinet-user-left">Email</div>
+                    <span sec:authentication="name" class="personal-cabinet-user-detail personal-cabinet-user-right">example@gmail.com</span>
+                </div>
+            </div>
+            <div class="nav-item active personal-cabinet-logout">
+                <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#"><i
+                        class="bi bi-box-arrow-left personal-cabinet-exit"></i><span class="personal-cabinet-exit-link">EXIT</span></a>
+            </div>
+
+        </div>
+
+        <div class="col-sm-7 personal-cabinet-orders">
+            <h1 class="personal-cabinet-orders-title">My orders</h1>
+
+            <div class="personal-cabinet-empty-orders">
+                <img th:if="${listOrders.size() <= 0}" th:src="@{/images/empty_order.svg}"
+                     src="../static/images/buy_cart_discount_shop_shopping_icon.svg" width="auto"
+                     height="300vh"
+                     class="d-inline-block align-top empty-cart empty-orders" alt=""/>
+                <a th:if="${listOrders.size() <= 0}" th:href="@{/shop}" h
+                   class="btn btn-primary btn-block waves-effect waves-light button-cart-empty">Continue
+                    purchase</a>
+            </div>
+            <div class="mb-4 personal-cabinet-order-card-container" th:each="order : ${listOrders}">
+                <div class="personal-cabinet-order-all-items">
+                    <div th:each="orderItem : ${listOrderItems}" th:if="${orderItem.order.getId() == order.id}"
+                         class="personal-cabinet-orders-one-product">
+                        <div>
+                            <div class="mb-3 mb-md-0">
+                                <a href="#" th:href="@{${'/shop/viewproduct/' + orderItem.product.id}}">
+                                    <img width="150vw" height="150vh"
+                                         th:src="@{${'/productImages/' + orderItem.product.imageName}}"
+                                         src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12a.jpg"
+                                         alt="Sample">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-lg-9 col-xl-9 cart-inf">
+
+                            <div class="personal-cabinet-price-row">
+                                <div>
+                                    <a href="#" th:href="@{${'/shop/viewproduct/' + orderItem.product.id}}"
+                                       class="personal-cabinet-links">
+                                        <h5 class="cart-title-product" th:text="${orderItem.product.name}">Name of
+                                            phone</h5>
+                                    </a>
+                                </div>
+                                <div class="cart-product-price">
+                                    <p class="mb-0 cart-title-product"><span>$<span
+                                            th:text="${orderItem.product.price}"></span></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="personal-cabinet-order-details">
+                    <div class="personal-cabinet-order-delivery-status">
+                        Delivery Status:
+                        <span th:text="${order.deliveryStatus}" class="personal-cabinet-order-delivery-status-detail">Delivery Status: unknown</span>
+                    </div>
+                    <div class="personal-cabinet-order-id">
+                        <span th:text="${'№ ' + order.id}">№: unknown</span>
+                    </div>
+                </div>
+                <div class="personal-cabinet-order-price">
+                    <div class="personal-cabinet-order-delivery-status">
+                        Total amount: $
+                        <span th:text="${order.totalAmount}" class="personal-cabinet-order-delivery-status-detail">Total amount: $</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+                crossorigin="anonymous"></script>
+    </div>
+</div>
+</body>
+</html>
