@@ -17,13 +17,28 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category) {
-        categoryRepository.save(category);
+    public boolean createCategory(Category category) {
+        if (categoryRepository.findByName(category.getName()).isEmpty()) {
+            categoryRepository.save(category);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public List<Category> getAllCategories() {
         // FIXME: 14.03.2023 need to fix NullPointerException
         return categoryRepository.findAll();
+    }
+
+    @Override
+    public boolean deleteCategory(Category category) {
+        if (categoryRepository.findByName(category.getName()).isPresent()) {
+            categoryRepository.delete(category);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

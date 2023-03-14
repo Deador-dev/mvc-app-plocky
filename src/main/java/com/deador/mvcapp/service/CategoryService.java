@@ -5,6 +5,8 @@ import com.deador.mvcapp.entity.Category;
 import java.util.List;
 
 public interface CategoryService {
-    void createCategory(Category category);
+    boolean createCategory(Category category);
     List<Category> getAllCategories();
+
+    boolean deleteCategory(Category category);
 }

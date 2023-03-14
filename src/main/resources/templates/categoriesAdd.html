@@ -35,7 +35,10 @@
                     <input type="text" class="form-control admin-categories-add-input" required th:field="*{name}" name="name" id="name"
                            placeholder="Enter category name" maxlength="100">
                 </div>
-                <button type="submit" class="btn btn-block admin-categories-add-button">Submit</button>
+                <div th:if="${creatingCategoryError == 'Creating category error'}" class="alert alert-error text-danger">
+                    Category with this name is already created.
+                </div>
+                <input type="submit" value="Save category" class="btn btn-block admin-categories-add-button"/>
             </form>
         </div>
     </div>

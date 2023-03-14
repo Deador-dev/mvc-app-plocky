@@ -17,12 +17,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void createCartForUser(User user) {
+    public boolean createCartForUser(User user) {
         Cart cart = new Cart();
         cart.setPrice(0.0);
         cart.setQuantity(0);
         cart.setUser(user);
         cartRepository.save(cart);
+        return true;
     }
 
     @Override
@@ -32,7 +33,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addProductToCart(User user, Product product) {
+    public boolean addProductToCart(User user, Product product) {
         // TODO: 14.03.2023 need to impl
+        return true;
     }
 }

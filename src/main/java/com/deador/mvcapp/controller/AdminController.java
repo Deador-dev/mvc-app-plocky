@@ -1,15 +1,11 @@
 package com.deador.mvcapp.controller;
 
 import com.deador.mvcapp.entity.Category;
-import com.deador.mvcapp.repository.CategoryRepository;
 import com.deador.mvcapp.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,15 +30,29 @@ public class AdminController {
     }
 
     @GetMapping("/categories/add")
-    public String getCategoryAdd(Model model){
+    public String getCategoryAdd(Model model) {
         model.addAttribute("category", new Category());
         return "/categoriesAdd";
     }
 
     @PostMapping("/categories/add")
-    public String createCategory(@ModelAttribute("category") Category category){
-        categoryService.createCategory(category);
-        return "redirect:/admin/categories";
+    public String createCategory(@ModelAttribute("category") Category category,
+                                 Model model) {
+        if (categoryService.createCategory(category)) {
+            return "redirect:/admin/categories";
+        } else {
+            model.addAttribute("creatingCategoryError", "Creating category error");
+            return "/categoriesAdd";
+        }
+
     }
 
+    // FIXME: 14.03.2023 Why not @DeleteMapping ?
+    @GetMapping("/categories/delete/{id}")
+    public String getDeleteCategory(@PathVariable Category id) {
+        if (categoryService.deleteCategory(id)) {
+            return "redirect:/admin/categories";
+        }
+        return "categories";
+    }
 }

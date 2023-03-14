@@ -19,9 +19,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(User user) {
+    public boolean createUser(User user) {
         userRepository.save(user);
         cartService.createCartForUser(user);
+        return true;
     }
 
     @Override
