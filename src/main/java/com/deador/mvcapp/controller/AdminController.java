@@ -49,10 +49,24 @@ public class AdminController {
 
     // FIXME: 14.03.2023 Why not @DeleteMapping ?
     @GetMapping("/categories/delete/{id}")
-    public String getDeleteCategory(@PathVariable Category id) {
-        if (categoryService.deleteCategory(id)) {
+    public String getDeleteCategory(@PathVariable(name = "id") Category category) {
+        if (categoryService.deleteCategory(category)) {
             return "redirect:/admin/categories";
         }
         return "categories";
     }
+
+    @GetMapping("/categories/update/{id}")
+    public String getUpdateCategory(@PathVariable(name = "id") Category category,
+                                    Model model) {
+        if (categoryService.getCategoryByName(category.getName()).isPresent()) {
+            model.addAttribute("category", category);
+            return "/categoriesAdd";
+        } else {
+            return "/404";
+        }
+
+    }
+
+
 }

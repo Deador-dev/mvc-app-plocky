@@ -20,7 +20,7 @@ public class HomeController {
     @GetMapping("/shop")
     public String getShop(@AuthenticationPrincipal User user,
                           Model model) {
-        model.addAttribute("cartCount", cartService.getCartByUser(user).getQuantity());
+        model.addAttribute("cartCount", cartService.getCartQuantityByUser(user));
         model.addAttribute("pageUrlPrefix", "/shop");
 
         return "/shop";

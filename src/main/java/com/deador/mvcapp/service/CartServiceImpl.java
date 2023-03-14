@@ -22,14 +22,19 @@ public class CartServiceImpl implements CartService {
         cart.setPrice(0.0);
         cart.setQuantity(0);
         cart.setUser(user);
+
         cartRepository.save(cart);
         return true;
     }
 
     @Override
-    public Cart getCartByUser(User user) {
-        // FIXME: 14.03.2023 need to create custom exception or something
-        return cartRepository.findByUser(user).get();
+    public Integer getCartQuantityByUser(User user) {
+        if (user == null) {
+            return 0;
+
+        }
+
+        return cartRepository.findByUser(user).get().getQuantity();
     }
 
     @Override
