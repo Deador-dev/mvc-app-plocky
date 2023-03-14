@@ -1,7 +1,9 @@
 package com.deador.mvcapp.service;
 
 import com.deador.mvcapp.entity.Category;
+import com.deador.mvcapp.entity.Product;
 import com.deador.mvcapp.repository.CategoryRepository;
+import com.deador.mvcapp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +13,12 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -29,7 +33,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllCategories() {
-        // FIXME: 14.03.2023 need to fix NullPointerException
         return categoryRepository.findAll();
     }
 
@@ -40,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean deleteCategory(Category category) {
-        if (categoryRepository.findByName(category.getName()).isPresent()) {
+        if (categoryRepository.findByName(category.getName()).isPresent() && productRepository.findAllByCategory(category).isEmpty()) {
             categoryRepository.delete(category);
             return true;
         } else {

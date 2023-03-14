@@ -27,6 +27,9 @@
 <div class="container">
 
     <a th:href="@{/admin/categories/add}" class="btn btn-primary admin-home-categories-button">Add Category</a>
+    <div th:if="${deletingCategoryError == 'Error deleting category'}" class="alert alert-error text-danger">
+        You need to delete all smartphones of this category. After that, you will be able to delete the category.
+    </div>
     <table class="table">
         <thead class="admin-home-categories-table-title">
         <tr>
