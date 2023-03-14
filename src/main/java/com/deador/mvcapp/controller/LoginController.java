@@ -46,7 +46,7 @@ public class LoginController {
     public String createUser(@ModelAttribute("user") User user,
                              HttpServletRequest request,
                              Model model) throws ServletException {
-        Optional<User> userFromDB = userService.findByEmail(user.getEmail());
+        Optional<User> userFromDB = userService.getUserByEmail(user.getEmail());
 
         if (userFromDB.isPresent() && user.getEmail().equals(userFromDB.get().getEmail())) {
             model.addAttribute("authenticationError", "Authentication error");

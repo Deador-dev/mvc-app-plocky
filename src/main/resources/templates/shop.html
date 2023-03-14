@@ -123,7 +123,7 @@
                         <!-- Previous page -->
                         <div class="shop-pagination-previous-page">
                             <a th:if="${currentPage > 1}" class="pagination-link"
-                               th:href="@{${pageUrlPrefix.pageUrlPrefixString} + '/page/' + ${currentPage - 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">
+                               th:href="@{${pageUrlPrefix} + '/page/' + ${currentPage - 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">
                                 <i class="fa-solid fa-angle-left pagination-icon pagination-left"></i>Previous
                             </a><span th:unless="${currentPage > 1}" class="pagination-link"><i
                                 class="fa-solid fa-angle-left pagination-icon pagination-left"></i>Previous</span>
@@ -133,7 +133,7 @@
                             <div>
                                 <span class="pagination-number-span" th:each="i: ${#numbers.sequence(1, totalPages)}">
                                     <a th:if="${currentPage != i}" class="pagination-link"
-                                       th:href="@{${pageUrlPrefix.pageUrlPrefixString} + '/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                                       th:href="@{${pageUrlPrefix} + '/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
                                 <span th:unless="${currentPage != i}">[[${i}]]</span>
                                 </span>
                             </div>
@@ -141,7 +141,7 @@
                         <!-- Next page -->
                         <div class="shop-pagination-next-page">
                             <a th:if="${currentPage < totalPages}" class="pagination-link"
-                               th:href="@{${pageUrlPrefix.pageUrlPrefixString} + '/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">
+                               th:href="@{${pageUrlPrefix} + '/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">
                                 <span class="pagination-next">Next</span>
                                 <i class="fa-solid fa-angle-right pagination-icon pagination-right"></i>
                             </a>

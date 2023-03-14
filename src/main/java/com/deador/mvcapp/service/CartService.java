@@ -7,7 +7,7 @@ import com.deador.mvcapp.entity.User;
 public interface CartService {
     void createCartForUser(User user);
 
-    Cart findCartByUser(User user);
+    Cart getCartByUser(User user);
 
     void addProductToCart(User user, Product product);
 }

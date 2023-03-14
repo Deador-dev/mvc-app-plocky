@@ -26,7 +26,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart findCartByUser(User user) {
+    public Cart getCartByUser(User user) {
         // FIXME: 14.03.2023 need to create custom exception or something
         return cartRepository.findByUser(user).get();
     }
