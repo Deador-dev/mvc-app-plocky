@@ -9,16 +9,19 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final CartService cartService;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(CartService cartService, UserRepository userRepository) {
+        this.cartService = cartService;
         this.userRepository = userRepository;
     }
 
     @Override
     public void createUser(User user) {
         userRepository.save(user);
+        cartService.createCartForUser(user);
     }
 
     @Override
