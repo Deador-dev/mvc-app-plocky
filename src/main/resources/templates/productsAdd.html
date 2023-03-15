@@ -230,6 +230,7 @@
                     <img src="#" id="imgPreview" height="150px" width="150px"
                          th:src="@{${'/productImages/' + productDTO.imageName}}" style="margin-top: 20px" alt=" ">
                 </div>
+                <input type="hidden" name="imgName" th:value="${productDTO.imageName}">
             </div>
         </div>
     </form>

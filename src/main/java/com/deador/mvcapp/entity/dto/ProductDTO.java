@@ -1,12 +1,13 @@
 package com.deador.mvcapp.entity.dto;
 
 import com.deador.mvcapp.entity.Category;
+import com.deador.mvcapp.entity.dto.marker.Convertible;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
-public class ProductDTO {
+public class ProductDTO implements Convertible {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,4 +1,4 @@
-package com.deador.mvcapp.service;
+package com.deador.mvcapp.service.userdetail;
 
 import com.deador.mvcapp.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class CustomUserDetail extends User implements UserDetails {
+    // TODO: 15.03.2023 don't work?
 
     public CustomUserDetail(User user) {
         super(user);

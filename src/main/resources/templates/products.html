@@ -27,8 +27,12 @@
     <div th:if="${deletingProductError == 'Error deleting category'}" class="alert alert-error text-danger">
         Error deleting product.
     </div>
-    <div th:if="${deletingNonExistentProductError == 'Deleting non-existent product'}" class="alert alert-error text-danger">
+    <div th:if="${deletingNonExistentProductError == 'Deleting non-existent product'}"
+         class="alert alert-error text-danger">
         Deleting non-existent product.
+    </div>
+    <div th:if="${updatingProductError == 'Error updating product'}" class="alert alert-error text-danger">
+        Error updating product.
     </div>
 
     <table class="table">
@@ -54,8 +58,11 @@
                     <button type="submit" class="btn admin-home-categories-button-delete">Delete</button>
                 </form>
             </td>
-            <td class="categories-button"><a href="" th:href="@{/admin/products/update/{id}(id=${product.id})}"
-                                             class="btn admin-home-products-button-update">Update</a></td>
+            <td class="categories-button">
+                <form th:action="@{/admin/products/update/{id}(id=${product.id})}" th:method="GET">
+                    <button type="submit" class="btn admin-home-categories-button-update">Update</button>
+                </form>
+            </td>
 
         </tr>
         </tbody>

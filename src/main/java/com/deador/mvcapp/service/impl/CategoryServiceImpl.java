@@ -1,9 +1,10 @@
-package com.deador.mvcapp.service;
+package com.deador.mvcapp.service.impl;
 
 import com.deador.mvcapp.entity.Category;
 import com.deador.mvcapp.entity.Product;
 import com.deador.mvcapp.repository.CategoryRepository;
 import com.deador.mvcapp.repository.ProductRepository;
+import com.deador.mvcapp.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

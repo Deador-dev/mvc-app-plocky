@@ -1,7 +1,9 @@
-package com.deador.mvcapp.service;
+package com.deador.mvcapp.service.impl;
 
 import com.deador.mvcapp.entity.User;
 import com.deador.mvcapp.repository.UserRepository;
+import com.deador.mvcapp.service.CartService;
+import com.deador.mvcapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

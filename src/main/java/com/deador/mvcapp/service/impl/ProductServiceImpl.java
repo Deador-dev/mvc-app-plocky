@@ -1,8 +1,10 @@
-package com.deador.mvcapp.service;
+package com.deador.mvcapp.service.impl;
 
+import com.deador.mvcapp.converter.DTOConverter;
 import com.deador.mvcapp.entity.Product;
 import com.deador.mvcapp.entity.dto.ProductDTO;
 import com.deador.mvcapp.repository.ProductRepository;
+import com.deador.mvcapp.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,12 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
     private final static String uploadPath = System.getProperty("user.dir") + "/src/main/resources/static/productImages/";
     private final ProductRepository productRepository;
+    private final DTOConverter dtoConverter;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, DTOConverter dtoConverter) {
         this.productRepository = productRepository;
+        this.dtoConverter = dtoConverter;
     }
 
     @Override
@@ -34,16 +38,12 @@ public class ProductServiceImpl implements ProductService {
 
     // TODO: 15.03.2023 need to create ProductValidationException
     @Override
-    public boolean createProduct(ProductDTO productDTO, MultipartFile file) {
+    public boolean createProduct(ProductDTO productDTO, MultipartFile file, String imgName) {
         if (productDTO == null) {
             return false;
         }
 
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE);
-        Product product = modelMapper
-                .map(productDTO, Product.class);
+        Product product = dtoConverter.convertToEntity(productDTO, new Product());
 
         if (!file.isEmpty()) {
             Path uploadDir = Paths.get(uploadPath);
@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
 
             product.setImageName(resultFilename);
         } else {
-            product.setImageName("unknown");
+            product.setImageName(imgName);
         }
 
         productRepository.save(product);

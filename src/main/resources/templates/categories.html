@@ -56,7 +56,7 @@
                 </form>
             </td>
             <td class="categories-button">
-                <form th:action="@{/admin/categories/update/{id}(id=${category.id})}" th:method="PUT">
+                <form th:action="@{/admin/categories/update/{id}(id=${category.id})}" th:method="GET">
                     <button type="submit" class="btn admin-home-categories-button-update">Update</button>
                 </form>
             </td>

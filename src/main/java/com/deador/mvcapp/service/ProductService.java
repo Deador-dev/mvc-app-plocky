@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductService {
     List<Product> getAllProducts();
 
-    boolean createProduct(ProductDTO productDTO, MultipartFile file);
+    boolean createProduct(ProductDTO productDTO, MultipartFile file, String imgName);
 
     boolean deleteProduct(Product product);
 
