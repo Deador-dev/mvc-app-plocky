@@ -10,4 +10,8 @@ public interface ProductService {
     List<Product> getAllProducts();
 
     boolean createProduct(ProductDTO productDTO, MultipartFile file);
+
+    boolean deleteProduct(Product product);
+
+    boolean productExists(Product product);
 }

@@ -22,8 +22,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean createCategory(Category category) {
-        if (categoryRepository.findByName(category.getName()).isEmpty()) {
+    public boolean createOrUpdateCategory(Category category) {
+        if (category != null && categoryRepository.findByName(category.getName()).isEmpty()) {
             categoryRepository.save(category);
             return true;
         }
@@ -37,13 +37,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<Category> getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public Optional<Category> getCategoryById(Long id) {
+        return categoryRepository.findById(id);
+    }
+
+    public boolean categoryExists(Category category) {
+        return category != null && categoryRepository.findById(category.getId()).isPresent();
     }
 
     @Override
     public boolean deleteCategory(Category category) {
-        if (categoryRepository.findByName(category.getName()).isPresent() && productRepository.findAllByCategory(category).isEmpty()) {
+        if (category != null && categoryRepository.findById(category.getId()).isPresent() && productRepository.findAllByCategory(category).isEmpty()) {
             categoryRepository.delete(category);
             return true;
         } else {

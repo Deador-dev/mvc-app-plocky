@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    public static String uploadPath = System.getProperty("user.dir") + "/src/main/resources/static/productImages/";
+    private final static String uploadPath = System.getProperty("user.dir") + "/src/main/resources/static/productImages/";
     private final ProductRepository productRepository;
 
     @Autowired
@@ -34,6 +34,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean createProduct(ProductDTO productDTO, MultipartFile file) {
+        if (productDTO == null) {
+            return false;
+        }
+
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.LOOSE);
@@ -70,5 +74,20 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
 
         return true;
+    }
+
+    @Override
+    public boolean deleteProduct(Product product) {
+        if (product != null && productRepository.findById(product.getId()).isPresent()) {
+            productRepository.delete(product);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean productExists(Product product) {
+        return product != null && productRepository.findById(product.getId()).isPresent();
     }
 }

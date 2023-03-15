@@ -1,6 +1,7 @@
 package com.deador.mvcapp.controller;
 
 import com.deador.mvcapp.entity.Category;
+import com.deador.mvcapp.entity.Product;
 import com.deador.mvcapp.entity.dto.ProductDTO;
 import com.deador.mvcapp.service.CategoryService;
 import com.deador.mvcapp.service.ProductService;
@@ -9,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Controller
 @RequestMapping("/admin")
@@ -44,7 +43,7 @@ public class AdminController {
     @PostMapping("/categories/add")
     public String createCategory(@ModelAttribute("category") Category category,
                                  Model model) {
-        if (categoryService.createCategory(category)) {
+        if (categoryService.createOrUpdateCategory(category)) {
             return "redirect:/admin/categories";
         } else {
             model.addAttribute("creatingCategoryError", "Creating category error");
@@ -55,24 +54,29 @@ public class AdminController {
 
     // FIXME: 14.03.2023 Why not @DeleteMapping ?
     @GetMapping("/categories/delete/{id}")
-    public String getDeleteCategory(@PathVariable(name = "id") Category category,
+    public String getDeleteCategory(@PathVariable(name = "id", required = false) Category category,
                                     Model model) {
         if (categoryService.deleteCategory(category)) {
             return "redirect:/admin/categories";
+        } else if (!categoryService.categoryExists(category)) {
+            model.addAttribute("deletingNonExistentCategoryError", "Deleting non-existent category");
+            return "forward:/admin/categories";
         } else {
             model.addAttribute("deletingCategoryError", "Error deleting category");
             return "forward:/admin/categories";
         }
     }
 
+    // FIXME: 14.03.2023 Why not @PutMapping ?
     @GetMapping("/categories/update/{id}")
-    public String getUpdateCategory(@PathVariable(name = "id") Category category,
+    public String getUpdateCategory(@PathVariable(name = "id", required = false) Category category,
                                     Model model) {
-        if (categoryService.getCategoryByName(category.getName()).isPresent()) {
+        if (categoryService.categoryExists(category)) {
             model.addAttribute("category", category);
             return "/categoriesAdd";
         } else {
-            return "/404";
+            model.addAttribute("updatingCategoryError", "Error updating category");
+            return "forward:/admin/categories";
         }
     }
 
@@ -97,5 +101,18 @@ public class AdminController {
         return "redirect:/admin/products";
     }
 
-
+    // FIXME: 15.03.2023 Why not @DeleteMapping ?
+    @GetMapping("/products/delete/{id}")
+    public String getDeleteProduct(@PathVariable(name = "id", required = false) Product product,
+                                   Model model) {
+        if (productService.deleteProduct(product)) {
+            return "redirect:/admin/products";
+        } else if (productService.productExists(product)) {
+            model.addAttribute("deletingNonExistentProductError", "Deleting non-existent product");
+            return "forward:/admin/products";
+        } else {
+            model.addAttribute("deletingProductError", "Error deleting category");
+            return "forward:/admin/products";
+        }
+    }
 }

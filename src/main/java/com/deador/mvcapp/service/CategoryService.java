@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    boolean createCategory(Category category);
+    boolean createOrUpdateCategory(Category category);
 
     boolean deleteCategory(Category category);
 
     List<Category> getAllCategories();
 
-    Optional<Category> getCategoryByName(String name);
+    Optional<Category> getCategoryById(Long id);
+
+    boolean categoryExists(Category category);
 }
