@@ -49,8 +49,11 @@
             <td th:text="${product.category.name}" class="admin-home-categories-info">Bob</td>
             <td><img src="" height="150vh" width="150vw" th:src="@{${'/productImages/' + product.imageName}}"></td>
 
-            <td class="categories-button"><a href="" th:href="@{/admin/products/delete/{id}(id=${product.id})}"
-                                             class="btn admin-home-products-button-delete">Delete</a></td>
+            <td class="categories-button">
+                <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" th:method="DELETE">
+                    <button type="submit" class="btn admin-home-categories-button-delete">Delete</button>
+                </form>
+            </td>
             <td class="categories-button"><a href="" th:href="@{/admin/products/update/{id}(id=${product.id})}"
                                              class="btn admin-home-products-button-update">Update</a></td>
 

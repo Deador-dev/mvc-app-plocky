@@ -25,7 +25,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/shop/**", "/register", "/search/**").permitAll()
-                /// FIXME: 13.03.2023 hasAuthority ???
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()

@@ -50,10 +50,16 @@
             <th scope="row" th:text="${iStat.index + 1}" class="admin-home-categories-info">1</th>
             <td th:text="${category.name}" class="admin-home-categories-info">Larry</td>
 
-            <td class="categories-button"><a href="" th:href="@{/admin/categories/delete/{id}(id=${category.id})}"
-                   class="btn admin-home-categories-button-delete">Delete</a></td>
-            <td class="categories-button"><a href="" th:href="@{/admin/categories/update/{id}(id=${category.id})}"
-                   class="btn admin-home-categories-button-update">Update</a></td>
+            <td class="categories-button">
+                <form th:action="@{/admin/categories/delete/{id}(id=${category.id})}" th:method="DELETE">
+                    <button type="submit" class="btn admin-home-categories-button-delete">Delete</button>
+                </form>
+            </td>
+            <td class="categories-button">
+                <form th:action="@{/admin/categories/update/{id}(id=${category.id})}" th:method="PUT">
+                    <button type="submit" class="btn admin-home-categories-button-update">Update</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>

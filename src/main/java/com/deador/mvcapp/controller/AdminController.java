@@ -30,7 +30,7 @@ public class AdminController {
 
     @GetMapping("/categories")
     public String getCategories(Model model) {
-        model.addAttribute("categories", categoryService.getAllCategories());
+        prepareCategoriesModel(model);
         return "/categories";
     }
 
@@ -52,37 +52,51 @@ public class AdminController {
 
     }
 
-    // FIXME: 14.03.2023 Why not @DeleteMapping ?
-    @GetMapping("/categories/delete/{id}")
-    public String getDeleteCategory(@PathVariable(name = "id", required = false) Category category,
-                                    Model model) {
+    @DeleteMapping("/categories/delete/{id}")
+    public String deleteCategory(@PathVariable(name = "id", required = false) Category category,
+                                 Model model) {
         if (categoryService.deleteCategory(category)) {
             return "redirect:/admin/categories";
         } else if (!categoryService.categoryExists(category)) {
             model.addAttribute("deletingNonExistentCategoryError", "Deleting non-existent category");
-            return "forward:/admin/categories";
+            // FIXME: 15.03.2023 forward?
+            // You cannot use forward.
+            // When using forward, the request continues to be a DELETE request,
+            // which is not supported on the page you are redirecting to.
+            prepareCategoriesModel(model);
+            return "/categories";
         } else {
             model.addAttribute("deletingCategoryError", "Error deleting category");
-            return "forward:/admin/categories";
+            // FIXME: 15.03.2023 forward?
+            // You cannot use forward.
+            // When using forward, the request continues to be a DELETE request,
+            // which is not supported on the page you are redirecting to.
+            prepareCategoriesModel(model);
+            return "/categories";
         }
     }
 
-    // FIXME: 14.03.2023 Why not @PutMapping ?
-    @GetMapping("/categories/update/{id}")
-    public String getUpdateCategory(@PathVariable(name = "id", required = false) Category category,
-                                    Model model) {
+    // FIXME: 15.03.2023 here need to use @GetMapping & need to create update form (Currently, 1 form is used to create and update a category)
+    @PutMapping("/categories/update/{id}")
+    public String updateCategory(@PathVariable(name = "id", required = false) Category category,
+                                 Model model) {
         if (categoryService.categoryExists(category)) {
             model.addAttribute("category", category);
             return "/categoriesAdd";
         } else {
             model.addAttribute("updatingCategoryError", "Error updating category");
-            return "forward:/admin/categories";
+            // FIXME: 15.03.2023 forward?
+            // You cannot use forward.
+            // When using forward, the request continues to be a DELETE request,
+            // which is not supported on the page you are redirecting to.
+            prepareCategoriesModel(model);
+            return "/categories";
         }
     }
 
     @GetMapping("/products")
     public String getProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        prepareProductsModel(model);
         return "/products";
     }
 
@@ -102,17 +116,35 @@ public class AdminController {
     }
 
     // FIXME: 15.03.2023 Why not @DeleteMapping ?
-    @GetMapping("/products/delete/{id}")
+    @DeleteMapping("/products/delete/{id}")
     public String getDeleteProduct(@PathVariable(name = "id", required = false) Product product,
                                    Model model) {
         if (productService.deleteProduct(product)) {
             return "redirect:/admin/products";
         } else if (productService.productExists(product)) {
             model.addAttribute("deletingNonExistentProductError", "Deleting non-existent product");
-            return "forward:/admin/products";
+            // FIXME: 15.03.2023 forward?
+            // You cannot use forward.
+            // When using forward, the request continues to be a DELETE request,
+            // which is not supported on the page you are redirecting to.
+            prepareProductsModel(model);
+            return "/products";
         } else {
             model.addAttribute("deletingProductError", "Error deleting category");
-            return "forward:/admin/products";
+            // FIXME: 15.03.2023 forward?
+            // You cannot use forward.
+            // When using forward, the request continues to be a DELETE request,
+            // which is not supported on the page you are redirecting to.
+            prepareProductsModel(model);
+            return "/products";
         }
+    }
+
+    private void prepareCategoriesModel(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+    }
+
+    private void prepareProductsModel(Model model) {
+        model.addAttribute("products", productService.getAllProducts());
     }
 }

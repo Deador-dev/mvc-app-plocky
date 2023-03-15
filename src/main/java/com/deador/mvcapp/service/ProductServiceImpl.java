@@ -32,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll();
     }
 
+    // TODO: 15.03.2023 need to create ProductValidationException
     @Override
     public boolean createProduct(ProductDTO productDTO, MultipartFile file) {
         if (productDTO == null) {
