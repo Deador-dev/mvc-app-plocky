@@ -10,6 +10,10 @@ import com.deador.mvcapp.exception.NotExistException;
 import com.deador.mvcapp.repository.ProductRepository;
 import com.deador.mvcapp.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +69,10 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product product = dtoConverter.convertToEntity(productDTO, Product.class);
+        // FIXME: 17.03.2023 need to fix
+        if (product.getCountOfViews() == null || product.getCountOfViews() <= 0) {
+            product.setCountOfViews(0L);
+        }
 
         if (!file.isEmpty()) {
             Path uploadDir = Paths.get(uploadPath);
@@ -112,5 +120,42 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean isProductExistsById(Long id) {
         return productRepository.existsById(id);
+    }
+
+    @Override
+    public Page<Product> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Pageable pageable = getPageable(pageNo, pageSize, sortField, sortDirection);
+
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Product> findPaginatedInCategory(int pageNo, int pageSize, String sortField, String sortDirection, Long categoryId) {
+        Pageable pageable = getPageable(pageNo, pageSize, sortField, sortDirection);
+
+        return productRepository.findAllByCategoryId(categoryId, pageable);
+    }
+
+    @Override
+    public Page<Product> findPaginatedInSearch(int pageNo, int pageSize, String sortField, String sortDirection, String keyword) {
+        Pageable pageable = getPageable(pageNo, pageSize, sortField, sortDirection);
+
+        return productRepository.findAllByNameContaining(keyword, pageable);
+    }
+
+    @Override
+    @Transactional
+    public void incrementProductViewCountById(Long id) {
+        Product product = getProductById(id);
+        product.setCountOfViews(product.getCountOfViews() + 1);
+        productRepository.save(product);
+    }
+
+    private static Pageable getPageable(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+
+        return PageRequest.of(pageNo - 1, pageSize, sort);
     }
 }
