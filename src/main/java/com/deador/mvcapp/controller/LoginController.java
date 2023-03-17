@@ -2,8 +2,8 @@ package com.deador.mvcapp.controller;
 
 import com.deador.mvcapp.entity.User;
 import com.deador.mvcapp.repository.RoleRepository;
-import com.deador.mvcapp.service.userdetail.CustomUserDetailService;
 import com.deador.mvcapp.service.UserService;
+import com.deador.mvcapp.service.userdetail.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;

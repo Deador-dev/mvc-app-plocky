@@ -1,6 +1,7 @@
 package com.deador.mvcapp.service.impl;
 
 import com.deador.mvcapp.entity.Order;
+import com.deador.mvcapp.exception.NotExistException;
 import com.deador.mvcapp.repository.OrderRepository;
 import com.deador.mvcapp.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,10 @@ import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+    private static final String ORDER_CREATING_ERROR = "Order isn't created";
+    private static final String ORDER_UPDATING_ERROR = "Can't update order by id: %s";
+    private static final String ORDER_ALREADY_EXIST = "Order already exist with name %s";
+    private static final String ORDER_NOT_FOUND_BY_ID = "Order not found by id: %s";
     private final OrderRepository orderRepository;
 
     @Autowired
@@ -25,11 +30,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrderById(Long id) {
-        Optional<Order> optionalOrder = getOptionalOrderById(id);
-        if(optionalOrder.isEmpty()){
-            // TODO: 17.03.2023 exception ORDER_NOT_FOUND_BY_ID
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        if (optionalOrder.isEmpty()) {
+            throw new NotExistException(String.format(ORDER_NOT_FOUND_BY_ID, id));
         }
-        return optionalOrder.orElseThrow();
+
+        return optionalOrder.get();
     }
 
     @Override
@@ -37,7 +43,4 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.existsById(id);
     }
 
-    private Optional<Order> getOptionalOrderById(Long id) {
-        return orderRepository.findById(id);
-    }
 }

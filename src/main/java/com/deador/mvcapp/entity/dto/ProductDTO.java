@@ -1,10 +1,11 @@
 package com.deador.mvcapp.entity.dto;
 
-import com.deador.mvcapp.entity.Category;
 import com.deador.mvcapp.entity.dto.marker.Convertible;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Data
 public class ProductDTO implements Convertible {

@@ -103,44 +103,17 @@ public class AdminController {
     @DeleteMapping("/products/delete/{id}")
     public String deleteProduct(@PathVariable(name = "id") Long id,
                                 Model model) {
-        if (productService.deleteProductById(id)) {
-            return "redirect:/admin/products";
-        } else if (!productService.isProductExistsById(id)) {
-            model.addAttribute("deletingNonExistentProductError", "Deleting non-existent product");
-            // FIXME: 15.03.2023 forward?
-            // You cannot use forward.
-            // When using forward, the request continues to be a DELETE request,
-            // which is not supported on the page you are redirecting to.
-            prepareProductsModel(model);
-            return "/products";
-        } else {
-            model.addAttribute("deletingProductError", "Error deleting category");
-            // FIXME: 15.03.2023 forward?
-            // You cannot use forward.
-            // When using forward, the request continues to be a DELETE request,
-            // which is not supported on the page you are redirecting to.
-            prepareProductsModel(model);
-            return "/products";
-        }
+        productService.deleteProductById(id);
+        return "redirect:/admin/products";
     }
 
     // FIXME: 15.03.2023 need to create update form (Currently, 1 form is used to create and update a product)
     @GetMapping("/products/update/{id}")
     public String updateProduct(@PathVariable(name = "id") Long id,
                                 Model model) {
-        if (productService.isProductExistsById(id)) {
-            prepareCategoriesModel(model);
-            model.addAttribute("productDTO", dtoConverter.convertToDto(productService.getProductById(id), ProductDTO.class));
-            return "productsAdd";
-        } else {
-            model.addAttribute("updatingProductError", "Error updating product");
-            // FIXME: 15.03.2023 forward?
-            // You cannot use forward.
-            // When using forward, the request continues to be a DELETE request,
-            // which is not supported on the page you are redirecting to.
-            prepareProductsModel(model);
-            return "/products";
-        }
+        prepareCategoriesModel(model);
+        model.addAttribute("productDTO", dtoConverter.convertToDto(productService.getProductById(id), ProductDTO.class));
+        return "productsAdd";
     }
 
     @GetMapping("/orders")
@@ -152,13 +125,10 @@ public class AdminController {
     @GetMapping("/order/orderDetails/{id}")
     public String viewOrderDetails(@PathVariable(name = "id") Long id,
                                    Model model) {
-        if (orderService.isOrderExistsById(id)) {
-            model.addAttribute("order", orderService.getOrderById(id));
-            // TODO: 17.03.2023 model.addAttribute("listOrderItems", orderItemService.getAllOrderItemsById(id))
-            return "/orderDetails";
-        }
-        // FIXME: 17.03.2023 need to use something another
-        return "/orders";
+        model.addAttribute("order", orderService.getOrderById(id));
+        // TODO: 17.03.2023 model.addAttribute("listOrderItems", orderItemService.getAllOrderItemsById(id))
+
+        return "/orderDetails";
     }
 
 
