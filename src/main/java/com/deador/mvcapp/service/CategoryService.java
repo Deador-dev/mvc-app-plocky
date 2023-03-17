@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface CategoryService {
     boolean createOrUpdateCategory(Category category);
 
-    boolean deleteCategory(Category category);
+    boolean deleteCategoryById(Long id);
 
     List<Category> getAllCategories();
 
-    Optional<Category> getCategoryById(Long id);
+    Category getCategoryById(Long id);
 
-    boolean categoryExists(Category category);
+    boolean isCategoryExistsById(Long id);
 }

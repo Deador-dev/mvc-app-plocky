@@ -27,14 +27,8 @@
 <div class="container">
 
     <a th:href="@{/admin/categories/add}" class="btn btn-primary admin-home-categories-button">Add Category</a>
-    <div th:if="${deletingCategoryError == 'Error deleting category'}" class="alert alert-error text-danger">
-        You need to delete all smartphones of this category. After that, you will be able to delete the category.
-    </div>
-    <div th:if="${updatingCategoryError == 'Error updating category'}" class="alert alert-error text-danger">
-        Error updating category.
-    </div>
-    <div th:if="${deletingNonExistentCategoryError == 'Deleting non-existent category'}" class="alert alert-error text-danger">
-        Deleting non-existent category.
+    <div th:if="${errorMessage}" class="alert alert-error text-danger">
+        <p th:text="${errorMessage}">Some error</p>
     </div>
     <table class="table">
         <thead class="admin-home-categories-table-title">

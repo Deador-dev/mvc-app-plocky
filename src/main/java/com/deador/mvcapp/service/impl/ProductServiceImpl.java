@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,6 +37,13 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll();
     }
 
+    @Override
+    public Product getProductById(Long id) {
+        Optional<Product> optionalProduct = getOptionalProductById(id);
+        // TODO: 17.03.2023 exception PRODUCT_NOT_FOUND_BY_ID
+        return optionalProduct.orElseThrow();
+    }
+
     // TODO: 15.03.2023 need to create ProductValidationException
     @Override
     public boolean createProduct(ProductDTO productDTO, MultipartFile file, String imgName) {
@@ -43,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
             return false;
         }
 
-        Product product = dtoConverter.convertToEntity(productDTO, new Product());
+        Product product = dtoConverter.convertToEntity(productDTO, Product.class);
 
         if (!file.isEmpty()) {
             Path uploadDir = Paths.get(uploadPath);
@@ -78,9 +86,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(Product product) {
-        if (product != null && productRepository.findById(product.getId()).isPresent()) {
-            productRepository.delete(product);
+    public boolean deleteProductById(Long id) {
+        if (isProductExistsById(id)) {
+            productRepository.deleteById(id);
             return true;
         } else {
             return false;
@@ -88,7 +96,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean productExists(Product product) {
-        return product != null && productRepository.findById(product.getId()).isPresent();
+    public boolean isProductExistsById(Long id) {
+        return productRepository.existsById(id);
+    }
+
+    private Optional<Product> getOptionalProductById(Long id) {
+        return productRepository.findById(id);
     }
 }

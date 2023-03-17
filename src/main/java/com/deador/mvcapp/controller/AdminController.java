@@ -2,9 +2,9 @@ package com.deador.mvcapp.controller;
 
 import com.deador.mvcapp.converter.DTOConverter;
 import com.deador.mvcapp.entity.Category;
-import com.deador.mvcapp.entity.Product;
 import com.deador.mvcapp.entity.dto.ProductDTO;
 import com.deador.mvcapp.service.CategoryService;
+import com.deador.mvcapp.service.OrderService;
 import com.deador.mvcapp.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,19 +12,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Type;
-
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final CategoryService categoryService;
     private final ProductService productService;
+    private final OrderService orderService;
     private final DTOConverter dtoConverter;
 
     @Autowired
-    public AdminController(CategoryService categoryService, ProductService productService, DTOConverter dtoConverter) {
+    public AdminController(CategoryService categoryService, ProductService productService, OrderService orderService, DTOConverter dtoConverter) {
         this.categoryService = categoryService;
         this.productService = productService;
+        this.orderService = orderService;
         this.dtoConverter = dtoConverter;
     }
 
@@ -41,6 +41,7 @@ public class AdminController {
 
     @GetMapping("/categories/add")
     public String getCategoryForm(Model model) {
+        // FIXME: 17.03.2023 !new Category()
         model.addAttribute("category", new Category());
         return "/categoriesAdd";
     }
@@ -48,55 +49,26 @@ public class AdminController {
     @PostMapping("/categories/add")
     public String createCategory(@ModelAttribute("category") Category category,
                                  Model model) {
-        if (categoryService.createOrUpdateCategory(category)) {
-            return "redirect:/admin/categories";
-        } else {
-            model.addAttribute("creatingCategoryError", "Creating category error");
-            return "/categoriesAdd";
-        }
+        categoryService.createOrUpdateCategory(category);
+        prepareCategoriesModel(model);
+        return "redirect:/admin/categories";
 
     }
 
     @DeleteMapping("/categories/delete/{id}")
-    public String deleteCategory(@PathVariable(name = "id", required = false) Category category,
+    public String deleteCategory(@PathVariable(name = "id") Long id,
                                  Model model) {
-        if (categoryService.deleteCategory(category)) {
-            return "redirect:/admin/categories";
-        } else if (!categoryService.categoryExists(category)) {
-            model.addAttribute("deletingNonExistentCategoryError", "Deleting non-existent category");
-            // FIXME: 15.03.2023 forward?
-            // You cannot use forward.
-            // When using forward, the request continues to be a DELETE request,
-            // which is not supported on the page you are redirecting to.
-            prepareCategoriesModel(model);
-            return "/categories";
-        } else {
-            model.addAttribute("deletingCategoryError", "Error deleting category");
-            // FIXME: 15.03.2023 forward?
-            // You cannot use forward.
-            // When using forward, the request continues to be a DELETE request,
-            // which is not supported on the page you are redirecting to.
-            prepareCategoriesModel(model);
-            return "/categories";
-        }
+        categoryService.deleteCategoryById(id);
+        prepareCategoriesModel(model);
+        return "redirect:/admin/categories";
     }
 
     // FIXME: 15.03.2023 need to create update form (Currently, 1 form is used to create and update a category)
     @GetMapping("/categories/update/{id}")
-    public String updateCategory(@PathVariable(name = "id", required = false) Category category,
+    public String updateCategory(@PathVariable(name = "id") Long id,
                                  Model model) {
-        if (categoryService.categoryExists(category)) {
-            model.addAttribute("category", category);
-            return "/categoriesAdd";
-        } else {
-            model.addAttribute("updatingCategoryError", "Error updating category");
-            // FIXME: 15.03.2023 forward?
-            // You cannot use forward.
-            // When using forward, the request continues to be a DELETE request,
-            // which is not supported on the page you are redirecting to.
-            prepareCategoriesModel(model);
-            return "/categories";
-        }
+        model.addAttribute("category", categoryService.getCategoryById(id));
+        return "/categoriesAdd";
     }
 
     @GetMapping("/products")
@@ -107,6 +79,7 @@ public class AdminController {
 
     @GetMapping("/products/add")
     public String getProductForm(Model model) {
+        // FIXME: 17.03.2023 !new ProductDTO()
         model.addAttribute("productDTO", new ProductDTO());
         model.addAttribute("categories", categoryService.getAllCategories());
         return "/productsAdd";
@@ -121,13 +94,12 @@ public class AdminController {
         return "redirect:/admin/products";
     }
 
-    // FIXME: 15.03.2023 Why not @DeleteMapping ?
     @DeleteMapping("/products/delete/{id}")
-    public String deleteProduct(@PathVariable(name = "id", required = false) Product product,
+    public String deleteProduct(@PathVariable(name = "id") Long id,
                                 Model model) {
-        if (productService.deleteProduct(product)) {
+        if (productService.deleteProductById(id)) {
             return "redirect:/admin/products";
-        } else if (productService.productExists(product)) {
+        } else if (!productService.isProductExistsById(id)) {
             model.addAttribute("deletingNonExistentProductError", "Deleting non-existent product");
             // FIXME: 15.03.2023 forward?
             // You cannot use forward.
@@ -148,12 +120,11 @@ public class AdminController {
 
     // FIXME: 15.03.2023 need to create update form (Currently, 1 form is used to create and update a product)
     @GetMapping("/products/update/{id}")
-    public String updateProduct(@PathVariable(name = "id", required = false) Product product,
+    public String updateProduct(@PathVariable(name = "id") Long id,
                                 Model model) {
-        // TODO: 15.03.2023 here
-        if (productService.productExists(product)) {
+        if (productService.isProductExistsById(id)) {
             prepareCategoriesModel(model);
-            model.addAttribute("productDTO", dtoConverter.convertToDto(product, ProductDTO.class));
+            model.addAttribute("productDTO", dtoConverter.convertToDto(productService.getProductById(id), ProductDTO.class));
             return "productsAdd";
         } else {
             model.addAttribute("updatingProductError", "Error updating product");
@@ -166,11 +137,34 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/orders")
+    public String viewOrders(Model model) {
+        prepareOrdersModel(model);
+        return "/orders";
+    }
+
+    @GetMapping("/order/orderDetails/{id}")
+    public String viewOrderDetails(@PathVariable(name = "id") Long id,
+                                   Model model) {
+        if (orderService.isOrderExistsById(id)) {
+            model.addAttribute("order", orderService.getOrderById(id));
+            // TODO: 17.03.2023 model.addAttribute("listOrderItems", orderItemService.getAllOrderItemsById(id))
+            return "/orderDetails";
+        }
+        // FIXME: 17.03.2023 need to use something another
+        return "/orders";
+    }
+
+
     private void prepareCategoriesModel(Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
     }
 
     private void prepareProductsModel(Model model) {
         model.addAttribute("products", productService.getAllProducts());
+    }
+
+    private void prepareOrdersModel(Model model) {
+        model.addAttribute("orders", orderService.getAllOrders());
     }
 }

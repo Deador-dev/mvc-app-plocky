@@ -16,8 +16,8 @@ public class DTOConverter {
         this.modelMapper = modelMapper;
     }
 
-    public <T, D extends Convertible> D convertToEntity(T dto, D entity) {
-        return modelMapper.map(dto, (Type) entity.getClass());
+    public <T, D extends Convertible> D convertToEntity(T dto, Type entityClass) {
+        return modelMapper.map(dto, entityClass);
     }
 
     public <T, D extends Convertible> T convertToDto(D entity, Type dtoClass) {

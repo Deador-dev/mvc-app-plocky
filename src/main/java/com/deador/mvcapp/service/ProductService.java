@@ -9,9 +9,11 @@ import java.util.List;
 public interface ProductService {
     List<Product> getAllProducts();
 
+    Product getProductById(Long id);
+
     boolean createProduct(ProductDTO productDTO, MultipartFile file, String imgName);
 
-    boolean deleteProduct(Product product);
+    boolean deleteProductById(Long id);
 
-    boolean productExists(Product product);
+    boolean isProductExistsById(Long id);
 }
