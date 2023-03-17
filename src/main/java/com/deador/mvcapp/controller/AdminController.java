@@ -3,6 +3,7 @@ package com.deador.mvcapp.controller;
 import com.deador.mvcapp.converter.DTOConverter;
 import com.deador.mvcapp.entity.Category;
 import com.deador.mvcapp.entity.dto.ProductDTO;
+import com.deador.mvcapp.factory.ObjectFactory;
 import com.deador.mvcapp.service.CategoryService;
 import com.deador.mvcapp.service.OrderService;
 import com.deador.mvcapp.service.ProductService;
@@ -19,13 +20,19 @@ public class AdminController {
     private final ProductService productService;
     private final OrderService orderService;
     private final DTOConverter dtoConverter;
+    private final ObjectFactory objectFactory;
 
     @Autowired
-    public AdminController(CategoryService categoryService, ProductService productService, OrderService orderService, DTOConverter dtoConverter) {
+    public AdminController(CategoryService categoryService,
+                           ProductService productService,
+                           OrderService orderService,
+                           DTOConverter dtoConverter,
+                           ObjectFactory objectFactory) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.orderService = orderService;
         this.dtoConverter = dtoConverter;
+        this.objectFactory = objectFactory;
     }
 
     @GetMapping
@@ -42,7 +49,7 @@ public class AdminController {
     @GetMapping("/categories/add")
     public String getCategoryForm(Model model) {
         // FIXME: 17.03.2023 !new Category()
-        model.addAttribute("category", new Category());
+        model.addAttribute("category", objectFactory.createObject(Category.class));
         return "/categoriesAdd";
     }
 
@@ -80,7 +87,7 @@ public class AdminController {
     @GetMapping("/products/add")
     public String getProductForm(Model model) {
         // FIXME: 17.03.2023 !new ProductDTO()
-        model.addAttribute("productDTO", new ProductDTO());
+        model.addAttribute("productDTO", objectFactory.createObject(ProductDTO.class));
         model.addAttribute("categories", categoryService.getAllCategories());
         return "/productsAdd";
     }
@@ -90,7 +97,6 @@ public class AdminController {
                                 @RequestParam("productImage") MultipartFile file,
                                 @RequestParam("imgName") String imgName) {
         productService.createProduct(productDTO, file, imgName);
-
         return "redirect:/admin/products";
     }
 

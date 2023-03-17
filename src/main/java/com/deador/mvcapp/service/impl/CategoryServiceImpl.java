@@ -14,10 +14,13 @@ import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+    private static final String CATEGORY_CREATING_ERROR = "Category isn't created or updated";
+    private static final String CATEGORY_DELETING_ERROR = "Can't delete category cause of relationship by id: %s";
+    private static final String CATEGORY_UPDATING_ERROR = "Can't update category by id: %s";
     private static final String CATEGORY_ALREADY_EXIST = "Category already exist with name %s";
     private static final String CATEGORY_NOT_FOUND_BY_ID = "Category not found by id: %s";
-    private static final String CATEGORY_DELETING_ERROR = "Can't delete category cause of relationship by id: %s";
-    private static final String CATEGORY_CREATING_ERROR = "Category isn't created or updated.";
+
+
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
@@ -45,21 +48,25 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public boolean createOrUpdateCategory(Category category) {
-        //Update category
+        // Update category
         if (category.getId() != null && isCategoryExistsById(category.getId())) {
             Category existingCategory = categoryRepository.findById(category.getId()).orElse(null);
             if (existingCategory != null && !existingCategory.getName().equals(category.getName())) {
+                // Check if new category name already exists
+                if (categoryRepository.findByName(category.getName()).isPresent()) {
+                    throw new NotExistException(String.format(CATEGORY_UPDATING_ERROR, category.getId()));
+                }
                 categoryRepository.save(category);
                 return true;
             }
         }
-        //Create new category
+        // Create new category
         else if (category.getId() == null && category.getName() != null && categoryRepository.findByName(category.getName()).isEmpty()) {
             categoryRepository.save(category);
             return true;
         }
-        //Throw exception if category is not updated or created
-        throw new NotExistException(String.format(CATEGORY_CREATING_ERROR));
+        // Throw exception if category is not updated or created
+        throw new NotExistException(CATEGORY_CREATING_ERROR);
     }
 
 

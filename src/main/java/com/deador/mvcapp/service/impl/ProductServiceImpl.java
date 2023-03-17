@@ -3,12 +3,15 @@ package com.deador.mvcapp.service.impl;
 import com.deador.mvcapp.converter.DTOConverter;
 import com.deador.mvcapp.entity.Product;
 import com.deador.mvcapp.entity.dto.ProductDTO;
+import com.deador.mvcapp.exception.DirectoryCreationException;
+import com.deador.mvcapp.exception.FileTransferException;
+import com.deador.mvcapp.exception.IncorrectInputException;
+import com.deador.mvcapp.exception.NotExistException;
 import com.deador.mvcapp.repository.ProductRepository;
 import com.deador.mvcapp.service.ProductService;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -23,11 +26,17 @@ import java.util.UUID;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final static String uploadPath = System.getProperty("user.dir") + "/src/main/resources/static/productImages/";
+    private static final String PRODUCT_ALREADY_EXIST = "Product already exist with name %s";
+    private static final String PRODUCT_NOT_FOUND_BY_ID = "Product not found by id: %s";
+    private static final String PRODUCT_DELETING_ERROR = "Product isn't deleted";
+    private static final String PRODUCT_CREATING_ERROR = "Product isn't created";
+    private static final String DIRECTORY_CREATION_ERROR = "Directory creation error with path: %s";
     private final ProductRepository productRepository;
     private final DTOConverter dtoConverter;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, DTOConverter dtoConverter) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              DTOConverter dtoConverter) {
         this.productRepository = productRepository;
         this.dtoConverter = dtoConverter;
     }
@@ -39,16 +48,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        Optional<Product> optionalProduct = getOptionalProductById(id);
-        // TODO: 17.03.2023 exception PRODUCT_NOT_FOUND_BY_ID
-        return optionalProduct.orElseThrow();
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new NotExistException(String.format(PRODUCT_NOT_FOUND_BY_ID, id));
+        }
+
+        return optionalProduct.get();
     }
 
-    // TODO: 15.03.2023 need to create ProductValidationException
+    // TODO: 15.03.2023 need to create ProductValidationException?
     @Override
+    @Transactional
     public boolean createProduct(ProductDTO productDTO, MultipartFile file, String imgName) {
         if (productDTO == null) {
-            return false;
+            throw new IncorrectInputException();
         }
 
         Product product = dtoConverter.convertToEntity(productDTO, Product.class);
@@ -60,8 +73,7 @@ public class ProductServiceImpl implements ProductService {
                 try {
                     Files.createDirectories(uploadDir);
                 } catch (IOException e) {
-                    // FIXME: 14.03.2023 need to use custom exception
-                    throw new RuntimeException(e);
+                    throw new DirectoryCreationException(String.format(DIRECTORY_CREATION_ERROR, uploadPath));
                 }
             }
 
@@ -71,8 +83,7 @@ public class ProductServiceImpl implements ProductService {
             try {
                 file.transferTo(new File(uploadPath + "/" + resultFilename));
             } catch (IOException e) {
-                // FIXME: 14.03.2023 need to use custom exception
-                throw new RuntimeException(e);
+                throw new FileTransferException();
             }
 
             product.setImageName(resultFilename);
@@ -86,21 +97,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public boolean deleteProductById(Long id) {
         if (isProductExistsById(id)) {
             productRepository.deleteById(id);
             return true;
+        } else if (!isProductExistsById(id)) {
+            throw new NotExistException(String.format(PRODUCT_NOT_FOUND_BY_ID, id));
         } else {
-            return false;
+            throw new NotExistException(String.format(PRODUCT_DELETING_ERROR, id));
         }
     }
 
     @Override
     public boolean isProductExistsById(Long id) {
         return productRepository.existsById(id);
-    }
-
-    private Optional<Product> getOptionalProductById(Long id) {
-        return productRepository.findById(id);
     }
 }

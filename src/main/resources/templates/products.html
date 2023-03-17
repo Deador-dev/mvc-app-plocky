@@ -24,15 +24,8 @@
 <div class="container">
 
     <a th:href="@{/admin/products/add}" class="btn btn-primary admin-home-categories-button">Add Product</a>
-    <div th:if="${deletingProductError == 'Error deleting category'}" class="alert alert-error text-danger">
-        Error deleting product.
-    </div>
-    <div th:if="${deletingNonExistentProductError == 'Deleting non-existent product'}"
-         class="alert alert-error text-danger">
-        Deleting non-existent product.
-    </div>
-    <div th:if="${updatingProductError == 'Error updating product'}" class="alert alert-error text-danger">
-        Error updating product.
+    <div th:if="${errorMessage}" class="alert alert-error text-danger">
+        <p th:text="${errorMessage}">Some error</p>
     </div>
 
     <table class="table">
