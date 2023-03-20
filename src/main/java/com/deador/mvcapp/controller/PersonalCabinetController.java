@@ -1,7 +1,5 @@
 package com.deador.mvcapp.controller;
 
-import com.deador.mvcapp.entity.Order;
-import com.deador.mvcapp.entity.OrderItem;
 import com.deador.mvcapp.entity.User;
 import com.deador.mvcapp.service.CartService;
 import com.deador.mvcapp.service.OrderItemService;
@@ -11,11 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class PersonalCabinetController {

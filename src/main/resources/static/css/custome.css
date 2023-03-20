@@ -967,6 +967,10 @@ textarea:focus,
 /*    margin-right: 10px;*/
 /*    top: -11px;*/
 /*}*/
+.personal-cabinet-container {
+    flex-wrap: nowrap !important;
+    margin-bottom: 3%;
+}
 
 .personal-cabinet-user-title {
     font-family: 'Poppins', sans-serif;

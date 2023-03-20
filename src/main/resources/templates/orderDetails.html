@@ -28,7 +28,7 @@
 </nav>
 
 <div class="container mt-5">
-    <div class="row">
+    <div class="row personal-cabinet-container">
         <div class="personal-cabinet-user">
             <div class="personal-cabinet-user-title"><p>Order data</p></div>
             <div>
@@ -53,7 +53,8 @@
                 </div>
                 <div class="personal-cabinet-user-info">
                     <div class="personal-cabinet-user-small-email personal-cabinet-user-left">Phone number</div>
-                    <span th:text="${order.phoneNumber}" class="personal-cabinet-user-detail personal-cabinet-user-right">unknown</span>
+                    <span th:text="${order.phoneNumber}"
+                          class="personal-cabinet-user-detail personal-cabinet-user-right">unknown</span>
                 </div>
                 <div class="personal-cabinet-user-info">
                     <div class="personal-cabinet-user-small-email personal-cabinet-user-left">Postcode</div>
@@ -66,6 +67,10 @@
                 <div class="personal-cabinet-user-info">
                     <div class="personal-cabinet-user-small-email personal-cabinet-user-left">Address</div>
                     <span th:text="${order.address}" class="personal-cabinet-user-detail personal-cabinet-user-right">unknown</span>
+                </div>
+                <div class="personal-cabinet-user-info">
+                    <div class="personal-cabinet-user-small-email personal-cabinet-user-left">Additional information</div>
+                    <span th:text="${order.additionalInformation}" class="personal-cabinet-user-detail personal-cabinet-user-right">unknown</span>
                 </div>
             </div>
         </div>
@@ -120,16 +125,18 @@
                         <span th:text="${order.totalAmount}" class="personal-cabinet-order-delivery-status-detail">Total amount: $</span>
                     </div>
                 </div>
-                <form th:action="@{/admin/orders/orderMore/update/{id} (id=${order.id})}" method="post" class="admin-orders-delivery-status-form"
-                      th:object="${order}">
-                    <input type="hidden" name="id" th:field="*{id}">
+                <form th:action="@{/admin/order/orderDetails/update/{id} (id=${order.id})}" method="post"
+                      class="admin-orders-delivery-status-form">
+                    <input type="hidden" name="id" th:field="*{order.id}">
                     <div class="form-group admin-categories-add-title-container">
                         <span class="admin-orders-delivery-status-title">Delivery status</span>
-                        <label for="deliveryStatus"></label>
-                        <input type="text" class="form-control admin-categories-add-input" required maxlength="100"
-                               th:field="*{deliveryStatus}"
-                               name="deliveryStatus" id="deliveryStatus"
-                               placeholder="Enter delivery status">
+                        <select class="form-control admin-home-products-placeholder"
+                                id="deliveryStatus"
+                                name="deliveryStatus">
+                            <option th:each="status :${deliveryStatusList}"
+                                    th:value="${status.getName()}"
+                                    th:text="${status.getName()}">
+                        </select>
                         <button type="submit" class="btn admin-orders-delivery-status-button">Submit</button>
                     </div>
                 </form>

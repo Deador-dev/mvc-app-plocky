@@ -91,4 +91,13 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.existsById(id);
     }
 
+    @Override
+    public boolean changeDeliveryStatusByOrderId(Long id, String deliveryStatus) {
+        Order order = getOrderById(id);
+        order.setDeliveryStatus(deliveryStatus);
+
+        orderRepository.save(order);
+        return true;
+    }
+
 }

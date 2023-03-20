@@ -51,10 +51,16 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
+    public List<OrderItem> getAllOrderItemsByOrderId(Long id) {
+        return orderItemRepository.findAllByOrderId(id);
+    }
+
+    @Override
     public List<OrderItem> getAllOrderItemsReverseByUser(User user) {
         List<OrderItem> orderItemListByUser = orderItemRepository.findByOrderUser(user);
         Collections.reverse(orderItemListByUser);
 
         return orderItemListByUser;
     }
+
 }

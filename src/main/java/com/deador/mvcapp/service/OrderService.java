@@ -3,7 +3,6 @@ package com.deador.mvcapp.service;
 import com.deador.mvcapp.entity.Order;
 import com.deador.mvcapp.entity.User;
 import com.deador.mvcapp.entity.dto.OrderDTO;
-import org.aspectj.weaver.ast.Or;
 
 import java.util.List;
 
@@ -19,4 +18,6 @@ public interface OrderService {
     List<Order> getAllOrdersReverseByUserId(Long id);
 
     boolean isOrderExistsById(Long id);
+
+    boolean changeDeliveryStatusByOrderId(Long id, String deliveryStatus);
 }

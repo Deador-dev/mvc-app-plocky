@@ -38,7 +38,7 @@ public class ExceptionHandlerController {
             modelAndView.setViewName("categories");
         } else if (requestURL.contains("/products")) {
             modelAndView.setViewName("products");
-        } else if (requestURL.contains("/orders")) {
+        } else if (requestURL.contains("/orders") || requestURL.contains("/order")) {
             modelAndView.setViewName("orders");
         } else {
             modelAndView.setViewName("error");

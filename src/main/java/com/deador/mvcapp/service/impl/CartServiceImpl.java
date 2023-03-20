@@ -12,7 +12,6 @@ import com.deador.mvcapp.repository.UserRepository;
 import com.deador.mvcapp.service.CartItemService;
 import com.deador.mvcapp.service.CartService;
 import com.deador.mvcapp.service.ProductService;
-import com.deador.mvcapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

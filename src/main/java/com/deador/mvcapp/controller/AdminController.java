@@ -2,9 +2,12 @@ package com.deador.mvcapp.controller;
 
 import com.deador.mvcapp.converter.DTOConverter;
 import com.deador.mvcapp.entity.Category;
+import com.deador.mvcapp.entity.Order;
 import com.deador.mvcapp.entity.dto.ProductDTO;
+import com.deador.mvcapp.entity.enums.DeliveryStatus;
 import com.deador.mvcapp.factory.ObjectFactory;
 import com.deador.mvcapp.service.CategoryService;
+import com.deador.mvcapp.service.OrderItemService;
 import com.deador.mvcapp.service.OrderService;
 import com.deador.mvcapp.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +16,32 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private final ObjectFactory objectFactory;
+    private final DTOConverter dtoConverter;
     private final CategoryService categoryService;
     private final ProductService productService;
     private final OrderService orderService;
-    private final DTOConverter dtoConverter;
-    private final ObjectFactory objectFactory;
+
+    private final OrderItemService orderItemService;
 
     @Autowired
-    public AdminController(CategoryService categoryService,
+    public AdminController(ObjectFactory objectFactory,
+                           DTOConverter dtoConverter,
+                           CategoryService categoryService,
                            ProductService productService,
                            OrderService orderService,
-                           DTOConverter dtoConverter,
-                           ObjectFactory objectFactory) {
+                           OrderItemService orderItemService) {
+        this.objectFactory = objectFactory;
+        this.dtoConverter = dtoConverter;
         this.categoryService = categoryService;
         this.productService = productService;
         this.orderService = orderService;
-        this.dtoConverter = dtoConverter;
-        this.objectFactory = objectFactory;
+        this.orderItemService = orderItemService;
     }
 
     @GetMapping
@@ -126,9 +135,17 @@ public class AdminController {
     public String viewOrderDetails(@PathVariable(name = "id") Long id,
                                    Model model) {
         model.addAttribute("order", orderService.getOrderById(id));
-        // TODO: 17.03.2023 model.addAttribute("listOrderItems", orderItemService.getAllOrderItemsById(id))
+        model.addAttribute("listOrderItems", orderItemService.getAllOrderItemsByOrderId(id));
+        model.addAttribute("deliveryStatusList", DeliveryStatus.values());
 
         return "/orderDetails";
+    }
+
+    @PostMapping("/order/orderDetails/update/{id}")
+    public String updateOrder(@PathVariable(name = "id") Long id,
+                              @RequestParam(name = "deliveryStatus") String deliveryStatus) {
+        orderService.changeDeliveryStatusByOrderId(id, deliveryStatus);
+        return "redirect:/admin/orders";
     }
 
 

@@ -22,7 +22,9 @@
     </div>
 </nav>
 <div class="container admin-orders-container">
-
+    <div th:if="${errorMessage}" class="alert alert-error text-danger">
+        <p th:text="${errorMessage}">Some error</p>
+    </div>
     <table class="table">
         <thead class="admin-home-categories-table-title">
         <tr>
@@ -43,7 +45,7 @@
             <td th:text="${order.firstName} + ' ' + ${order.lastName}" class="admin-home-categories-info">unknown</td>
             <td th:text="${order.phoneNumber}" class="admin-home-categories-info">unknown</td>
             <td th:text="${order.deliveryStatus}" class="admin-home-categories-info">unknown</td>
-            <td><a href="" th:href="@{/admin/order/orderMore/{id}(id=${order.id})}"
+            <td><a href="" th:href="@{/admin/order/orderDetails/{id}(id=${order.id})}"
                    class="btn admin-orders-button-more">More</a></td>
 
         </tr>
