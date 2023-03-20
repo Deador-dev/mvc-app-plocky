@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -83,6 +84,20 @@ public class CartServiceImpl implements CartService {
         cart.setQuantity(cart.getQuantity() - 1);
         cart.setPrice(cart.getPrice() - cartItem.getProduct().getPrice());
 
+        return true;
+    }
+
+    @Override
+    public boolean buyNowByProductId(User user, Long id) {
+        Cart cart = getCartByUser(user);
+        List<CartItem> cartItemList = cartItemService.getAllCartItemsByCartId(cart.getId());
+
+
+        for (CartItem cartItem : cartItemList) {
+            deleteProductFromCartByCartItemId(user, cartItem.getId());
+        }
+
+        addProductToCartByProductId(user, id);
         return true;
     }
 

@@ -1,33 +1,27 @@
-package com.deador.mvcapp.entity;
+package com.deador.mvcapp.entity.dto;
 
+import com.deador.mvcapp.entity.User;
 import com.deador.mvcapp.entity.dto.marker.Convertible;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-@Entity
-@Table(name = "orders")
 @Data
-public class Order implements Convertible {
+public class OrderDTO implements Convertible {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    private User user;
-
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> items;
-
+    private User userId;
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private String townCity;
+    private String email;
     private String address;
     private String postcode;
-    private String email;
+    private String townCity;
     private String additionalInformation;
     private String deliveryStatus;
-    private Double totalAmount;
+
 }

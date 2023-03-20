@@ -11,6 +11,8 @@ public interface CartService {
 
     boolean deleteProductFromCartByCartItemId(User user, Long id);
 
+    boolean buyNowByProductId(User user, Long id);
+
     Cart getCartByUser(User user);
 
     Double getCartPriceByUser(User user);
