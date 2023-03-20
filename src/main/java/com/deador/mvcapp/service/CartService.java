@@ -1,12 +1,19 @@
 package com.deador.mvcapp.service;
 
+import com.deador.mvcapp.entity.Cart;
 import com.deador.mvcapp.entity.Product;
 import com.deador.mvcapp.entity.User;
 
 public interface CartService {
     boolean createCartForUser(User user);
 
-    Integer getCartQuantityByUser(User user);
+    boolean addProductToCartByProductId(User user, Long id);
 
-    boolean addProductToCart(User user, Product product);
+    boolean deleteProductFromCartByCartItemId(User user, Long id);
+
+    Cart getCartByUser(User user);
+
+    Double getCartPriceByUser(User user);
+
+    Integer getCartQuantityByUser(User user);
 }

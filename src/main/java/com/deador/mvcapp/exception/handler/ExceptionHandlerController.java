@@ -2,6 +2,7 @@ package com.deador.mvcapp.exception.handler;
 
 import com.deador.mvcapp.exception.AlreadyExistException;
 import com.deador.mvcapp.exception.NotExistException;
+import com.deador.mvcapp.exception.UserAuthenticationException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +19,11 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(AlreadyExistException.class)
     public ModelAndView handleAlreadyExistException(HttpServletRequest request, NotExistException exception, Model model) {
+        return getModelAndView(request, exception, model);
+    }
+
+    @ExceptionHandler(UserAuthenticationException.class)
+    public ModelAndView handleAuthenticationException(HttpServletRequest request, NotExistException exception, Model model) {
         return getModelAndView(request, exception, model);
     }
 

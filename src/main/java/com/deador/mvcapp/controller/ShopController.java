@@ -14,16 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Controller
-public class HomeController {
+public class ShopController {
+    private static final int DEFAULT_PAGE_SIZE = 16;
     private final CategoryService categoryService;
     private final ProductService productService;
     private final CartService cartService;
 
     @Autowired
-    public HomeController(CategoryService categoryService,
+    public ShopController(CategoryService categoryService,
                           ProductService productService,
                           CartService cartService) {
         this.categoryService = categoryService;
@@ -43,7 +42,7 @@ public class HomeController {
                                @RequestParam("sortField") String sortField,
                                @RequestParam("sortDir") String sortDir,
                                Model model) {
-        Page<Product> page = productService.findPaginated(pageNo, 8, sortField, sortDir);
+        Page<Product> page = productService.findPaginated(pageNo, DEFAULT_PAGE_SIZE, sortField, sortDir);
 
         prepareModelForShop(user, pageNo, sortField, sortDir, model, page);
         model.addAttribute("pageUrlPrefix", "/shop");
@@ -58,7 +57,7 @@ public class HomeController {
                                      @RequestParam("sortField") String sortField,
                                      @RequestParam("sortDir") String sortDir,
                                      Model model) {
-        Page<Product> page = productService.findPaginatedInCategory(pageNo, 16, sortField, sortDir, id);
+        Page<Product> page = productService.findPaginatedInCategory(pageNo, DEFAULT_PAGE_SIZE, sortField, sortDir, id);
 
         prepareModelForShop(user, pageNo, sortField, sortDir, model, page);
         model.addAttribute("pageUrlPrefix", "/shop/category/" + id);
@@ -73,7 +72,7 @@ public class HomeController {
                                    @RequestParam("sortField") String sortField,
                                    @RequestParam("sortDir") String sortDir,
                                    Model model) {
-        Page<Product> page = productService.findPaginatedInSearch(pageNo, 250, sortField, sortDir, keyword);
+        Page<Product> page = productService.findPaginatedInSearch(pageNo, DEFAULT_PAGE_SIZE * 20, sortField, sortDir, keyword);
 
         prepareModelForShop(user, pageNo, sortField, sortDir, model, page);
         model.addAttribute("keyword", keyword);
@@ -98,9 +97,11 @@ public class HomeController {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("listProducts", page.getContent());
         model.addAttribute("cartCount", cartService.getCartQuantityByUser(user));
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
+
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");

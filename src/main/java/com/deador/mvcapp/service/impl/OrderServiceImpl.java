@@ -7,6 +7,7 @@ import com.deador.mvcapp.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,19 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return optionalOrder.get();
+    }
+
+    @Override
+    public List<Order> getAllOrdersByUserId(Long id) {
+        return orderRepository.findAllByUserId(id);
+    }
+
+    @Override
+    public List<Order> getAllOrdersReverseByUserId(Long id) {
+        List<Order> orderList = getAllOrdersByUserId(id);
+        Collections.reverse(orderList);
+
+        return orderList;
     }
 
     @Override

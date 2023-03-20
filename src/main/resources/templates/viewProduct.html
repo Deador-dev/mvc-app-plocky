@@ -74,10 +74,13 @@
                 <div class="view-product-count-of-view"><i class="bi bi-eye"></i><span th:text="${product.countOfViews}" class="view-product-count-of-view-number">0</span></div>
             </div>
             <div class="view-product-buttons">
-                <a href="" th:href="@{/buyNow/{id}(id = ${product.id})}" class="view-product-button-buy-now">Buy
-                    Now</a>
-                <a href="" th:href="@{/addToCart/{id}(id = ${product.id})}"
-                   class="view-product-button-add-to-cart">Add to cart</a>
+                <form th:action="@{/buyNow/{id}(id = ${product.id})}" th:method="POST" class="view-product-button-buy-now-form">
+                    <button type="submit" class="view-product-button-buy-now">Buy now</button>
+                </form>
+                <form th:action="@{/addToCart/{id}(id = ${product.id})}" th:method="POST" class="view-product-button-add-to-cart-form">
+                    <button type="submit" class="view-product-button-add-to-cart">Add to cart</button>
+                </form>
+
             </div>
             <div class="view-product-about-this-item-container">
                 <div class="view-product-about-this-item-container-title">

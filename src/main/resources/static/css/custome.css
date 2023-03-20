@@ -273,6 +273,11 @@ textarea:focus,
     /*align-self: flex-start;*/
 }
 
+.cart-delete-item {
+    border: none;
+    background-color: white;
+}
+
 .cart-hr {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -1145,19 +1150,32 @@ textarea:focus,
     margin-bottom: 3%;
 }
 
+.view-product-button-buy-now-form {
+    width: 50%;
+    text-align: center;
+    padding: 1%;
+}
+
 .view-product-button-buy-now {
+    border: none;
     font-family: 'Poppins', sans-serif;
     font-size: 1.8em !important;
     font-weight: 700;
-    margin-right: 5%;
     color: #fff !important;
     background: linear-gradient(94.94deg, #FF4040 2.13%, #FFCA41 100%) !important;
     border-radius: 10px !important;
     text-decoration: none !important;
     padding: 2%;
-    width: 50%;
+    width: 100%;
     text-align: center;
 }
+
+.view-product-button-add-to-cart-form {
+    width: 50%;
+    text-align: center;
+    padding: 1%;
+}
+
 
 .view-product-button-add-to-cart {
     font-family: 'Poppins', sans-serif;
@@ -1168,7 +1186,7 @@ textarea:focus,
     border-radius: 10px !important;
     text-decoration: none !important;
     padding: 2%;
-    width: 50%;
+    width: 100%;
     text-align: center;
 }
 
