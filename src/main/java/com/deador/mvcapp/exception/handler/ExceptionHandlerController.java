@@ -18,23 +18,25 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(AlreadyExistException.class)
-    public ModelAndView handleAlreadyExistException(HttpServletRequest request, NotExistException exception, Model model) {
+    public ModelAndView handleAlreadyExistException(HttpServletRequest request, AlreadyExistException exception, Model model) {
         return getModelAndView(request, exception, model);
     }
 
     @ExceptionHandler(UserAuthenticationException.class)
-    public ModelAndView handleAuthenticationException(HttpServletRequest request, NotExistException exception, Model model) {
+    public ModelAndView handleAuthenticationException(HttpServletRequest request, UserAuthenticationException exception, Model model) {
         return getModelAndView(request, exception, model);
     }
 
-    private ModelAndView getModelAndView(HttpServletRequest request, NotExistException exception, Model model) {
+    private ModelAndView getModelAndView(HttpServletRequest request, Exception exception, Model model) {
         String requestURL = request.getRequestURL().toString();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("exception", exception.getMessage());
         model.addAttribute("errorMessage", exception.getMessage());
 
-        if (requestURL.contains("/categories")) {
+        if (requestURL.contains("/register")) {
+            modelAndView.setViewName("register");
+        } else if (requestURL.contains("/categories")) {
             modelAndView.setViewName("categories");
         } else if (requestURL.contains("/products")) {
             modelAndView.setViewName("products");

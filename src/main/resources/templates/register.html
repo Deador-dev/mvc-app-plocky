@@ -28,6 +28,9 @@
 <div class="container register-col">
     <div class="col-sm-6 login-col-custome">
         <h3 class="login-title">Sign Up</h3>
+        <div th:if="${errorMessage}" class="alert alert-error text-danger">
+            <p th:text="${errorMessage}">Some error</p>
+        </div>
         <form th:action="@{/register}" th:object="${user}" method="post">
             <div class="form-group">
                 <label class="login-text" for="firstName">First Name</label>

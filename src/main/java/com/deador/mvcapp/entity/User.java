@@ -40,6 +40,9 @@ public class User {
     )
     private List<Role> roles;
 
+    private Boolean active;
+    private String activationCode;
+
     public User(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
@@ -47,5 +50,7 @@ public class User {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.roles = user.getRoles();
+        this.active = user.getActive();
+        this.activationCode = user.getActivationCode();
     }
 }

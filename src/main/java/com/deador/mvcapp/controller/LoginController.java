@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.ServletException;
@@ -19,14 +20,14 @@ import java.util.Optional;
 
 @Controller
 public class LoginController {
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
     private final RoleRepository roleRepository;
     private final CustomUserDetailService customUserDetailService;
 
     @Autowired
-    public LoginController(BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService, RoleRepository roleRepository, CustomUserDetailService customUserDetailService) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public LoginController(UserService userService,
+                           RoleRepository roleRepository,
+                           CustomUserDetailService customUserDetailService) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.customUserDetailService = customUserDetailService;
@@ -34,6 +35,7 @@ public class LoginController {
 
     @GetMapping("/login")
     private String getLogin() {
+        // TODO: 20.03.2023 need to create functionality to check user.active = true/false for login
         return "/login";
     }
 
@@ -44,23 +46,19 @@ public class LoginController {
 
     @PostMapping("/register")
     public String createUser(@ModelAttribute("user") User user,
-                             HttpServletRequest request,
-                             Model model) throws ServletException {
-        Optional<User> userFromDB = userService.getUserByEmail(user.getEmail());
+                             HttpServletRequest request) {
+        userService.createUserAndRequestLogin(user, request);
 
-        if (userFromDB.isPresent() && user.getEmail().equals(userFromDB.get().getEmail())) {
-            model.addAttribute("authenticationError", "Authentication error");
-            return "/register";
+        return "redirect:/shop";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activateAccount(@PathVariable(name = "code") String code,
+                                  Model model) {
+        if (userService.activateUser(code)) {
+            // FIXME: 20.03.2023 don't work model
+            model.addAttribute("activationMessage", "User successfully activated!");
         }
-
-        String password = user.getPassword();
-        user.setPassword(bCryptPasswordEncoder.encode(password));
-
-        user.setRoles(Collections.singletonList(roleRepository.findById(2L).get()));
-
-        userService.createUser(user);
-        request.login(user.getEmail(), password);
-
-        return "redirect:/";
+        return "/login";
     }
 }
