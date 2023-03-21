@@ -40,7 +40,8 @@ public class User {
     )
     private List<Role> roles;
 
-    private Boolean active;
+    @Column(name = "is_activated")
+    private Boolean isActivated;
     private String activationCode;
 
     public User(User user) {
@@ -50,7 +51,7 @@ public class User {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.roles = user.getRoles();
-        this.active = user.getActive();
+        this.isActivated = user.getIsActivated();
         this.activationCode = user.getActivationCode();
     }
 }

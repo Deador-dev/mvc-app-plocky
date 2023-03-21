@@ -18,6 +18,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.customUserDetailService = customUserDetailService;
     }
 
+    // TODO: 20.03.2023 need to add rememberMe()
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

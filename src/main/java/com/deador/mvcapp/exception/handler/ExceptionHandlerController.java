@@ -3,6 +3,7 @@ package com.deador.mvcapp.exception.handler;
 import com.deador.mvcapp.exception.AlreadyExistException;
 import com.deador.mvcapp.exception.NotExistException;
 import com.deador.mvcapp.exception.UserAuthenticationException;
+import com.deador.mvcapp.exception.UserNotActivatedException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +24,13 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(UserAuthenticationException.class)
-    public ModelAndView handleAuthenticationException(HttpServletRequest request, UserAuthenticationException exception, Model model) {
+    public ModelAndView handleUserAuthenticationException(HttpServletRequest request, UserAuthenticationException exception, Model model) {
+        return getModelAndView(request, exception, model);
+    }
+
+    // FIXME: 21.03.2023 don't work handle
+    @ExceptionHandler(UserNotActivatedException.class)
+    public ModelAndView handleUserNotActivatedException(HttpServletRequest request, UserNotActivatedException exception, Model model) {
         return getModelAndView(request, exception, model);
     }
 
@@ -36,6 +43,14 @@ public class ExceptionHandlerController {
 
         if (requestURL.contains("/register")) {
             modelAndView.setViewName("register");
+        } else if (requestURL.contains("/login")) {
+            modelAndView.setViewName("login");
+        } else if (requestURL.contains("/addToCart") || requestURL.contains("buyNow")) {
+            modelAndView.setViewName("login");
+        } else if (requestURL.contains("/personalCabinet")) {
+            modelAndView.setViewName("login");
+        } else if (requestURL.contains("/cart")) {
+            modelAndView.setViewName("login");
         } else if (requestURL.contains("/categories")) {
             modelAndView.setViewName("categories");
         } else if (requestURL.contains("/products")) {

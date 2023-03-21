@@ -60,6 +60,10 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public boolean addProductToCartByProductId(User user, Long id) {
+        if (user == null || user.getId() == null) {
+            throw new UserAuthenticationException();
+        }
+
         Cart cart = getCartByUser(user);
         Product product = productService.getProductById(id);
 
@@ -102,6 +106,10 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCartByUser(User user) {
+        if (user == null || user.getId() == null) {
+            throw new UserAuthenticationException();
+        }
+
         Optional<Cart> optionalCart = cartRepository.findByUser(user);
         if (optionalCart.isEmpty()) {
             throw new NotExistException(String.format(CART_NOT_FOUND_BY_USER));
@@ -112,6 +120,10 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Double getCartPriceByUser(User user) {
+        if (user == null || user.getId() == null) {
+            throw new UserAuthenticationException();
+        }
+
         Optional<Cart> optionalCart = cartRepository.findByUser(user);
         if (optionalCart.isEmpty()) {
             return 0.0;

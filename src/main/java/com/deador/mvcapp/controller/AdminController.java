@@ -2,7 +2,6 @@ package com.deador.mvcapp.controller;
 
 import com.deador.mvcapp.converter.DTOConverter;
 import com.deador.mvcapp.entity.Category;
-import com.deador.mvcapp.entity.Order;
 import com.deador.mvcapp.entity.dto.ProductDTO;
 import com.deador.mvcapp.entity.enums.DeliveryStatus;
 import com.deador.mvcapp.factory.ObjectFactory;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -57,7 +54,6 @@ public class AdminController {
 
     @GetMapping("/categories/add")
     public String getCategoryForm(Model model) {
-        // FIXME: 17.03.2023 !new Category()
         model.addAttribute("category", objectFactory.createObject(Category.class));
         return "/categoriesAdd";
     }
@@ -79,7 +75,6 @@ public class AdminController {
         return "redirect:/admin/categories";
     }
 
-    // FIXME: 15.03.2023 need to create update form (Currently, 1 form is used to create and update a category)
     @GetMapping("/categories/update/{id}")
     public String updateCategory(@PathVariable(name = "id") Long id,
                                  Model model) {
@@ -95,7 +90,6 @@ public class AdminController {
 
     @GetMapping("/products/add")
     public String getProductForm(Model model) {
-        // FIXME: 17.03.2023 !new ProductDTO()
         model.addAttribute("productDTO", objectFactory.createObject(ProductDTO.class));
         model.addAttribute("categories", categoryService.getAllCategories());
         return "/productsAdd";
@@ -110,13 +104,11 @@ public class AdminController {
     }
 
     @DeleteMapping("/products/delete/{id}")
-    public String deleteProduct(@PathVariable(name = "id") Long id,
-                                Model model) {
+    public String deleteProduct(@PathVariable(name = "id") Long id) {
         productService.deleteProductById(id);
         return "redirect:/admin/products";
     }
 
-    // FIXME: 15.03.2023 need to create update form (Currently, 1 form is used to create and update a product)
     @GetMapping("/products/update/{id}")
     public String updateProduct(@PathVariable(name = "id") Long id,
                                 Model model) {

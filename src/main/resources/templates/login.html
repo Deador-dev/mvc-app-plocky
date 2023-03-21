@@ -26,9 +26,6 @@
         <div>
 </nav>
 <div class="container">
-    <div th:if="${activationMessage}" class="alert alert-error text-danger">
-        <p th:text="${activationMessage}">Some error</p>
-    </div>
     <div class="row login-col">
         <div class="col-sm-6 login-col-custome">
             <h2 class="login-title">Login</h2>
@@ -45,8 +42,14 @@
                            placeholder="**********************" name="password" maxlength="150"
                            id="password">
                 </div>
+                <div th:if="${errorMessage}" class="alert alert-error text-danger">
+                    <p th:text="${errorMessage}">Some error</p>
+                </div>
                 <div th:if="${param.error}" class="alert alert-error text-danger">
-                    Invalid username or password.
+                    Please enter a valid username and password, or activate your account if you haven't done so already.
+                </div>
+                <div th:if="${activationMessage}" class="alert alert-success">
+                    <p th:text="${activationMessage}">Some message</p>
                 </div>
                 <input type="submit" value="Login" class="btn btn-primary btn-block login-button">
                 <!--                <div class="login-or">OR</div>-->

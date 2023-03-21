@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singletonList(roleRepository.findById(2L).get()));
-        user.setActive(false);
+        user.setIsActivated(false);
         user.setActivationCode(UUID.randomUUID().toString());
 
 
@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
         String password = user.getPassword();
         if (createUser(user)) {
             try {
+                // FIXME: 21.03.2023 why don't work request.login() ?
                 request.login(user.getEmail(), password);
             } catch (ServletException e) {
                 throw new UserAuthenticationException(USER_REQUEST_LOGIN_EXCEPTION);
@@ -105,11 +106,11 @@ public class UserServiceImpl implements UserService {
 
         User user = optionalUser.get();
         user.setActivationCode("Confirmed");
-        user.setActive(true);
+        user.setIsActivated(true);
 
         userRepository.save(user);
 
-        return false;
+        return true;
     }
 
     @Override

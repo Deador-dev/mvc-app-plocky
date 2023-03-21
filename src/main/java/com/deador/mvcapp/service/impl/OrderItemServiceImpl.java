@@ -4,6 +4,7 @@ import com.deador.mvcapp.entity.CartItem;
 import com.deador.mvcapp.entity.Order;
 import com.deador.mvcapp.entity.OrderItem;
 import com.deador.mvcapp.entity.User;
+import com.deador.mvcapp.exception.UserAuthenticationException;
 import com.deador.mvcapp.factory.ObjectFactory;
 import com.deador.mvcapp.repository.OrderItemRepository;
 import com.deador.mvcapp.service.CartService;
@@ -57,6 +58,10 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public List<OrderItem> getAllOrderItemsReverseByUser(User user) {
+        if(user == null || user.getId() == null){
+            throw new UserAuthenticationException();
+        }
+
         List<OrderItem> orderItemListByUser = orderItemRepository.findByOrderUser(user);
         Collections.reverse(orderItemListByUser);
 

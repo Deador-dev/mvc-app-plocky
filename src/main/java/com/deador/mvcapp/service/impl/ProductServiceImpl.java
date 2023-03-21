@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public boolean createProduct(ProductDTO productDTO, MultipartFile file, String imgName) {
-        if (productDTO == null) {
+        if (productDTO == null || productDTO.getName() == null) {
             throw new IncorrectInputException();
         }
 
@@ -113,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
         } else if (!isProductExistsById(id)) {
             throw new NotExistException(String.format(PRODUCT_NOT_FOUND_BY_ID, id));
         } else {
-            throw new NotExistException(String.format(PRODUCT_DELETING_ERROR, id));
+            throw new NotExistException(PRODUCT_DELETING_ERROR);
         }
     }
 

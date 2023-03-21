@@ -1,6 +1,8 @@
 package com.deador.mvcapp.service.userdetail;
 
 import com.deador.mvcapp.entity.User;
+import com.deador.mvcapp.exception.UserAuthenticationException;
+import com.deador.mvcapp.exception.UserNotActivatedException;
 import com.deador.mvcapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +14,6 @@ import java.util.Optional;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {
-    // TODO: 15.03.2023 don't work?
     private final UserRepository userRepository;
 
     @Autowired
@@ -21,12 +22,16 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         Optional<User> userFromDB = userRepository.findUserByEmail(email);
-        if (userFromDB.isPresent()) {
-            return userFromDB.map(CustomUserDetail::new).get();
-        } else {
-            throw new UsernameNotFoundException("User not found");
-        }
+
+        userFromDB.ifPresent(user -> {
+            if (user.getIsActivated() == null || !user.getIsActivated()) {
+                throw new UserNotActivatedException();
+            }
+        });
+
+        return userFromDB.map(CustomUserDetail::new)
+                .orElseThrow(() -> new UserAuthenticationException("User not found"));
     }
 }
