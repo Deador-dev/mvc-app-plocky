@@ -5,6 +5,7 @@ import com.deador.mvcapp.entity.Order;
 import com.deador.mvcapp.entity.User;
 import com.deador.mvcapp.entity.dto.OrderDTO;
 import com.deador.mvcapp.exception.NotExistException;
+import com.deador.mvcapp.exception.UserAuthenticationException;
 import com.deador.mvcapp.repository.OrderRepository;
 import com.deador.mvcapp.service.CartItemService;
 import com.deador.mvcapp.service.CartService;
@@ -79,8 +80,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllOrdersReverseByUserId(Long id) {
-        List<Order> orderList = getAllOrdersByUserId(id);
+    public List<Order> getAllOrdersReverseByUser(User user) {
+        if (user == null || user.getId() == null) {
+            throw new UserAuthenticationException();
+        }
+
+        List<Order> orderList = getAllOrdersByUserId(user.getId());
         Collections.reverse(orderList);
 
         return orderList;

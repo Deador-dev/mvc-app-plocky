@@ -15,7 +15,7 @@ public interface OrderService {
 
     List<Order> getAllOrdersByUserId(Long id);
 
-    List<Order> getAllOrdersReverseByUserId(Long id);
+    List<Order> getAllOrdersReverseByUser(User user);
 
     boolean isOrderExistsById(Long id);
 

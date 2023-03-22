@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singletonList(roleRepository.findById(2L).get()));
+        user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER").get()));
         user.setIsActivated(false);
         user.setActivationCode(UUID.randomUUID().toString());
 

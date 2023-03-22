@@ -28,7 +28,7 @@ public class PersonalCabinetController {
     @GetMapping("/personalCabinet")
     public String getPersonalCabinet(@AuthenticationPrincipal User user,
                                      Model model) {
-        model.addAttribute("listOrders", orderService.getAllOrdersReverseByUserId(user.getId()));
+        model.addAttribute("listOrders", orderService.getAllOrdersReverseByUser(user));
         model.addAttribute("listOrderItems", orderItemService.getAllOrderItemsReverseByUser(user));
         model.addAttribute("user", user);
         model.addAttribute("cartCount", cartService.getCartQuantityByUser(user));

@@ -1,5 +1,6 @@
 package com.deador.mvcapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -29,6 +31,11 @@ public class User {
     @Column(nullable = false, unique = true)
     @Email
     private String email;
+    private String userpic;
+    private String gender;
+    private String locale;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastVisit;
 
     private String password;
 
@@ -49,6 +56,10 @@ public class User {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
+        this.userpic = user.getUserpic();
+        this.gender = user.getGender();
+        this.locale = user.getLocale();
+        this.lastVisit = user.getLastVisit();
         this.password = user.getPassword();
         this.roles = user.getRoles();
         this.isActivated = user.getIsActivated();
