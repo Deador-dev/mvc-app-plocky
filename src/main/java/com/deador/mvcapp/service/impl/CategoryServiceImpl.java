@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public boolean deleteCategoryById(Long id) {
-        if (isCategoryExistsById(id) && productRepository.findAllByCategory(getCategoryById(id)).isEmpty()) {
+        if (isCategoryExistsById(id) && productRepository.findAllByCategoryId(id).isEmpty()) {
             categoryRepository.deleteById(id);
             return true;
         } else if (!isCategoryExistsById(id)) {

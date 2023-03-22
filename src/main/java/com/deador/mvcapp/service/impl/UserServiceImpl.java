@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         if (user == null || user.getEmail() == null || user.getPassword() == null) {
             throw new UserAuthenticationException(INVALID_DATA_INPUT_EXCEPTION);
         }
-        if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new UserAuthenticationException(String.format(USER_WITH_THIS_EMAIL_ALREADY_EXISTS_EXCEPTION, user.getEmail()));
         }
 
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean activateUser(String activationCode) {
-        Optional<User> optionalUser = userRepository.findUserByActivationCode(activationCode);
+        Optional<User> optionalUser = userRepository.findByActivationCode(activationCode);
         if (optionalUser.isEmpty()) {
             throw new NotExistException(String.format(USER_NOT_FOUND_BY_ACTIVATION_CODE_EXCEPTION, activationCode));
         }
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if (optionalUser.isEmpty()) {
             throw new NotExistException(String.format(USER_NOT_FOUND_BY_EMAIL_EXCEPTION, email));

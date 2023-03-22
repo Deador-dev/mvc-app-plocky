@@ -62,7 +62,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             throw new UserAuthenticationException();
         }
 
-        List<OrderItem> orderItemListByUser = orderItemRepository.findByOrderUser(user);
+        List<OrderItem> orderItemListByUser = orderItemRepository.findAllByOrderUser(user);
         Collections.reverse(orderItemListByUser);
 
         return orderItemListByUser;

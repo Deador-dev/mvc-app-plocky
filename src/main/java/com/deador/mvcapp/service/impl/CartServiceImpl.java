@@ -143,7 +143,7 @@ public class CartServiceImpl implements CartService {
             throw new UserAuthenticationException();
         }
 
-        User userFromDB = userRepository.findUserByEmail(user.getEmail())
+        User userFromDB = userRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new NotExistException(String.format(USER_NOT_FOUND_BY_EMAIL, user.getEmail())));
 
         Optional<Cart> optionalCart = cartRepository.findByUser(userFromDB);
