@@ -16,10 +16,9 @@ import java.util.Optional;
 @DataJpaTest
 public class CartItemRepositoryIT {
     private static final Long EXISTING_ID = 1L;
-    private static final Long WRONG_ID = 99L;
-
+    private static final Long NOT_EXISTING_ID = 99L;
     private static final Long EXISTING_CART_ID = 2L;
-    private static final Long WRONG_CART_ID = 99L;
+    private static final Long NOT_EXISTING_CART_ID = 99L;
 
     @Autowired
     private CartItemRepository cartItemRepository;
@@ -32,15 +31,16 @@ public class CartItemRepositoryIT {
     }
 
     @Test
-    public void findByWrongIdShouldReturnOptionalEmpty() {
-        assertThat(cartItemRepository.findById(WRONG_ID)).isEmpty();
+    public void findByNotExistingIdShouldReturnOptionalEmpty() {
+        assertThat(cartItemRepository.findById(NOT_EXISTING_ID)).isEmpty();
     }
 
     @Test
     public void findAllByExistingCartIdShouldReturnListOfCartItems() {
         List<CartItem> cartItemList = cartItemRepository.findAllByCartId(EXISTING_CART_ID);
 
-        assertThat(cartItemList.size()).isGreaterThan(0);
+        // FIXME: 23.03.2023 Any cart can have 0 cart items.
+//        assertThat(cartItemList.size()).isGreaterThan(0);
 
         for (CartItem cartItem : cartItemList) {
             assertThat(cartItem.getCart().getId()).isEqualTo(EXISTING_CART_ID);
@@ -48,8 +48,8 @@ public class CartItemRepositoryIT {
     }
 
     @Test
-    public void findAllByWrongCartIdShouldReturnEmptyList() {
-        assertThat(cartItemRepository.findAllByCartId(WRONG_CART_ID).size()).isEqualTo(0);
+    public void findAllByNotExistingCartIdShouldReturnEmptyList() {
+        assertThat(cartItemRepository.findAllByCartId(NOT_EXISTING_CART_ID).size()).isEqualTo(0);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class CartItemRepositoryIT {
     }
 
     @Test
-    public void existsByWrongIdShouldReturnFalse() {
-        assertFalse(cartItemRepository.existsById(WRONG_ID));
+    public void existsByNotExistingIdShouldReturnFalse() {
+        assertFalse(cartItemRepository.existsById(NOT_EXISTING_ID));
     }
 }

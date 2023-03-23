@@ -14,9 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 public class OrderItemRepositoryIT {
     private static final Long EXISTING_ORDER_ID = 1L;
-    private static final Long WRONG_ORDER_ID = 99L;
+    private static final Long NOT_EXISTING_ORDER_ID = 99L;
     private static final Long EXISTING_ORDER_USER_ID = 1L;
-    private static final Long WRONG_ORDER_USER_ID = 99L;
+    private static final Long NOT_EXISTING_ORDER_USER_ID = 99L;
 
     @Autowired
     private OrderItemRepository orderItemRepository;
@@ -41,14 +41,16 @@ public class OrderItemRepositoryIT {
 
         User user = userRepository.findById(EXISTING_ORDER_USER_ID).get();
 
+        assertThat(orderItemRepository.findAllByOrderUser(user).size()).isGreaterThan(0);
+
         for (OrderItem orderItem : orderItemRepository.findAllByOrderUser(user)) {
             assertThat(orderItem.getOrder().getUser().getId()).isEqualTo(EXISTING_ORDER_USER_ID);
         }
     }
 
     @Test
-    public void findAllByWrongOrderUserShouldReturnEmptyList() {
-        User user = userRepository.findById(WRONG_ORDER_USER_ID).orElse(null);
+    public void findAllByNotExistingOrderUserShouldReturnEmptyList() {
+        User user = userRepository.findById(NOT_EXISTING_ORDER_USER_ID).orElse(null);
 
         assertThat(user).isNull();
 
@@ -67,7 +69,7 @@ public class OrderItemRepositoryIT {
     }
 
     @Test
-    public void findAllByWrongOrderIdShouldReturnEmptyList() {
-        assertThat(orderItemRepository.findAllByOrderId(WRONG_ORDER_ID).size()).isEqualTo(0);
+    public void findAllByNotExistingOrderIdShouldReturnEmptyList() {
+        assertThat(orderItemRepository.findAllByOrderId(NOT_EXISTING_ORDER_ID).size()).isEqualTo(0);
     }
 }

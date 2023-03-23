@@ -23,13 +23,16 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     @Override
-    public void send(String emailTo, String subject, String message) {
+    public boolean send(String emailTo, String subject, String message) {
         SimpleMailMessage mailMessage = (SimpleMailMessage) objectFactory.createObject(SimpleMailMessage.class);
+
         mailMessage.setFrom(mailUsername);
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
 
         javaMailSender.send(mailMessage);
+
+        return true;
     }
 }

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest
 public class RoleRepositoryIT {
     private static final String EXISTING_NAME = "ROLE_ADMIN";
-    private static final String WRONG_NAME = "ROLE_SOME";
+    private static final String NOT_EXISTING_NAME = "ROLE_SOME";
     @Autowired
     private RoleRepository roleRepository;
 
@@ -36,8 +36,8 @@ public class RoleRepositoryIT {
     }
 
     @Test
-    public void findByWrongNameShouldReturnOptionalEmpty() {
-        assertThat(roleRepository.findByName(WRONG_NAME)).isEmpty();
+    public void findByNotExistingNameShouldReturnOptionalEmpty() {
+        assertThat(roleRepository.findByName(NOT_EXISTING_NAME)).isEmpty();
     }
 
     @Test
@@ -46,7 +46,7 @@ public class RoleRepositoryIT {
     }
 
     @Test
-    public void existsByWrongNameShouldReturnFalse() {
-        assertFalse(roleRepository.existsByName(WRONG_NAME));
+    public void existsByNotExistingNameShouldReturnFalse() {
+        assertFalse(roleRepository.existsByName(NOT_EXISTING_NAME));
     }
 }

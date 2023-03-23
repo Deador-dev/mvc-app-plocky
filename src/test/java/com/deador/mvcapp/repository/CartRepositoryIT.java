@@ -13,7 +13,7 @@ import java.util.Optional;
 @DataJpaTest
 public class CartRepositoryIT {
     private static final Long EXISTING_USER_ID = 1L;
-    private static final Long WRONG_USER_ID = 99L;
+    private static final Long NOT_EXISTING_USER_ID = 99L;
 
     @Autowired
     private CartRepository cartRepository;
@@ -34,8 +34,8 @@ public class CartRepositoryIT {
     }
 
     @Test
-    public void findByWrongUserShouldReturnOptionalEmpty() {
-        User user = userRepository.findById(WRONG_USER_ID).orElse(null);
+    public void findByNotExistingUserShouldReturnOptionalEmpty() {
+        User user = userRepository.findById(NOT_EXISTING_USER_ID).orElse(null);
 
         assertThat(user).isNull();
 

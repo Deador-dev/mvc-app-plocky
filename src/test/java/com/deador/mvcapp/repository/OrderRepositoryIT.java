@@ -15,9 +15,9 @@ import java.util.Optional;
 @DataJpaTest
 public class OrderRepositoryIT {
     private static final Long EXISTING_ID = 1L;
-    private static final Long WRONG_ID = 99L;
+    private static final Long NOT_EXISTING_ID = 99L;
     private static final Long EXISTING_USER_ID = 1L;
-    private static final Long WRONG_USER_ID = 99L;
+    private static final Long NOT_EXISTING_USER_ID = 99L;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -39,8 +39,8 @@ public class OrderRepositoryIT {
     }
 
     @Test
-    public void findByWrongIdShouldReturnOptionalEmpty() {
-        assertThat(orderRepository.findById(WRONG_ID)).isEmpty();
+    public void findByNotExistingIdShouldReturnOptionalEmpty() {
+        assertThat(orderRepository.findById(NOT_EXISTING_ID)).isEmpty();
     }
 
     @Test
@@ -56,8 +56,8 @@ public class OrderRepositoryIT {
     }
 
     @Test
-    public void findAllByWrongUserIdShouldReturnEmptyList() {
-        assertThat(orderRepository.findAllByUserId(WRONG_USER_ID).size()).isEqualTo(0);
+    public void findAllByNotExistingUserIdShouldReturnEmptyList() {
+        assertThat(orderRepository.findAllByUserId(NOT_EXISTING_USER_ID).size()).isEqualTo(0);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class OrderRepositoryIT {
     }
 
     @Test
-    public void existsByWrongIdShouldReturnFalse() {
-        assertFalse(orderRepository.existsById(WRONG_ID));
+    public void existsByNotExistingIdShouldReturnFalse() {
+        assertFalse(orderRepository.existsById(NOT_EXISTING_ID));
     }
 }

@@ -18,11 +18,11 @@ import java.util.Optional;
 @DataJpaTest
 public class ProductRepositoryIT {
     private static final Long EXISTING_ID = 1L;
-    private static final Long WRONG_ID = 99L;
+    private static final Long NOT_EXISTING_ID = 99L;
     private static final Long EXISTING_CATEGORY_ID = 1L;
-    private static final Long WRONG_CATEGORY_ID = 99L;
+    private static final Long NOT_EXISTING_CATEGORY_ID = 99L;
     private static final String EXISTING_NAME_CONTAINING = "Samsung";
-    private static final String WRONG_NAME_CONTAINING = "WrongText";
+    private static final String NOT_EXISTING_NAME_CONTAINING = "WrongText";
 
     @Autowired
     private ProductRepository productRepository;
@@ -44,8 +44,8 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    public void findByWrongIdShouldReturnOptionalEmpty() {
-        assertThat(productRepository.findById(WRONG_ID)).isEmpty();
+    public void findByNotExistingIdShouldReturnOptionalEmpty() {
+        assertThat(productRepository.findById(NOT_EXISTING_ID)).isEmpty();
     }
 
     @Test
@@ -60,8 +60,8 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    public void findAllByWrongCategoryIdShouldReturnEmptyList() {
-        assertThat(productRepository.findAllByCategoryId(WRONG_CATEGORY_ID).size()).isEqualTo(0);
+    public void findAllByNotExistingCategoryIdShouldReturnEmptyList() {
+        assertThat(productRepository.findAllByCategoryId(NOT_EXISTING_CATEGORY_ID).size()).isEqualTo(0);
     }
 
     @Test
@@ -78,10 +78,10 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    public void findAllByWrongCategoryIdShouldReturnEmptyPage() {
+    public void findAllByNotExistingCategoryIdShouldReturnEmptyPage() {
         Pageable pageable = PageRequest.of(0, 6);
 
-        assertThat(productRepository.findAllByCategoryId(WRONG_CATEGORY_ID, pageable).getContent().size()).isEqualTo(0);
+        assertThat(productRepository.findAllByCategoryId(NOT_EXISTING_CATEGORY_ID, pageable).getContent().size()).isEqualTo(0);
     }
 
     @Test
@@ -98,10 +98,10 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    public void findAllByWrongNameContainingShouldReturnEmptyPage() {
+    public void findAllByNotExistingNameContainingShouldReturnEmptyPage() {
         Pageable pageable = PageRequest.of(0, 6);
 
-        assertThat(productRepository.findAllByNameContaining(WRONG_NAME_CONTAINING, pageable).getContent().size()).isEqualTo(0);
+        assertThat(productRepository.findAllByNameContaining(NOT_EXISTING_NAME_CONTAINING, pageable).getContent().size()).isEqualTo(0);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    public void existsByWrongIdShouldReturnFalse() {
-        assertFalse(productRepository.existsById(WRONG_ID));
+    public void existsByNotExistingIdShouldReturnFalse() {
+        assertFalse(productRepository.existsById(NOT_EXISTING_ID));
     }
 }

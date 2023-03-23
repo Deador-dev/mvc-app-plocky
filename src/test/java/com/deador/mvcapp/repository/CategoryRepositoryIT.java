@@ -15,9 +15,9 @@ import java.util.Optional;
 @DataJpaTest
 public class CategoryRepositoryIT {
     private static final Long EXISTING_ID = 1L;
-    private static final Long WRONG_ID = 99L;
+    private static final Long NOT_EXISTING_ID = 99L;
     private static final String EXISTING_NAME = "Samsung";
-    private static final String WRONG_NAME = "WrongCategoryName";
+    private static final String NOT_EXISTING_NAME = "WrongCategoryName";
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -40,8 +40,8 @@ public class CategoryRepositoryIT {
     }
 
     @Test
-    public void findByWrongIdShouldReturnOptionalEmpty() {
-        assertThat(categoryRepository.findById(WRONG_ID)).isEmpty();
+    public void findByNotExistingIdShouldReturnOptionalEmpty() {
+        assertThat(categoryRepository.findById(NOT_EXISTING_ID)).isEmpty();
     }
 
     @Test
@@ -52,8 +52,8 @@ public class CategoryRepositoryIT {
     }
 
     @Test
-    public void findByWrongNameShouldReturnOptionalEmpty() {
-        assertThat(categoryRepository.findByName(WRONG_NAME)).isEmpty();
+    public void findByNotExistingNameShouldReturnOptionalEmpty() {
+        assertThat(categoryRepository.findByName(NOT_EXISTING_NAME)).isEmpty();
     }
 
     @Test
@@ -62,7 +62,7 @@ public class CategoryRepositoryIT {
     }
 
     @Test
-    public void existsByWrongIdShouldReturnFalse() {
-        assertFalse(categoryRepository.existsById(WRONG_ID));
+    public void existsByNotExistingIdShouldReturnFalse() {
+        assertFalse(categoryRepository.existsById(NOT_EXISTING_ID));
     }
 }
