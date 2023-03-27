@@ -112,6 +112,10 @@ public class UserServiceImpl implements UserService {
     public boolean activateUser(String activationCode) {
         User user = getUserByActivationCode(activationCode);
 
+        if (user.getIsActivated()) {
+            return false;
+        }
+
         user.setActivationCode("Confirmed");
         user.setIsActivated(true);
 

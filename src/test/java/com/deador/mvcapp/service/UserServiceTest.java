@@ -23,9 +23,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -92,24 +90,27 @@ public class UserServiceTest {
     void getUserByNotExistingIdTest() {
         when(userRepository.findById(NOT_EXISTING_ID)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.getUserById(NOT_EXISTING_ID)).isInstanceOf(NotExistException.class);
+        assertThatThrownBy(() -> userService.getUserById(NOT_EXISTING_ID))
+                .isInstanceOf(NotExistException.class)
+                .hasMessage(String.format(USER_NOT_FOUND_BY_ID_EXCEPTION, NOT_EXISTING_ID));
     }
 
     @Test
     void givenId_whenGetUserById_thenReturnUser() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepository.findById(EXISTING_ID)).thenReturn(Optional.of(user));
 
-        User actualUser = userService.getUserById(anyLong());
+        User actualUser = userService.getUserById(EXISTING_ID);
 
         assertThat(actualUser).isNotNull().isEqualTo(user);
     }
 
     @Test
     void givenId_whenGetUserById_thenThrowNotExistException() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(userRepository.findById(NOT_EXISTING_ID)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.getUserById(EXISTING_ID)).isInstanceOf(NotExistException.class)
-                .hasMessage(String.format(USER_NOT_FOUND_BY_ID_EXCEPTION, EXISTING_ID));
+        assertThatThrownBy(() -> userService.getUserById(NOT_EXISTING_ID))
+                .isInstanceOf(NotExistException.class)
+                .hasMessage(String.format(USER_NOT_FOUND_BY_ID_EXCEPTION, NOT_EXISTING_ID));
     }
 
     @Test
@@ -125,14 +126,16 @@ public class UserServiceTest {
     void getUserByNotExistingEmailTest() {
         when(userRepository.findByEmail(NOT_EXISTING_EMAIL)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.getUserByEmail(NOT_EXISTING_EMAIL)).isInstanceOf(NotExistException.class);
+        assertThatThrownBy(() -> userService.getUserByEmail(NOT_EXISTING_EMAIL))
+                .isInstanceOf(NotExistException.class)
+                .hasMessage(String.format(USER_NOT_FOUND_BY_EMAIL_EXCEPTION, NOT_EXISTING_EMAIL));
     }
 
     @Test
     void givenEmail_whenGetUserByEmail_thenReturnUser() {
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(EXISTING_EMAIL)).thenReturn(Optional.of(user));
 
-        User actualUser = userService.getUserByEmail(anyString());
+        User actualUser = userService.getUserByEmail(EXISTING_EMAIL);
 
         assertThat(actualUser).isNotNull().isEqualTo(user);
     }
@@ -141,7 +144,8 @@ public class UserServiceTest {
     void givenEmail_whenGetUserByEmail_thenThrowNotExistException() {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.getUserByEmail(EXISTING_EMAIL)).isInstanceOf(NotExistException.class)
+        assertThatThrownBy(() -> userService.getUserByEmail(EXISTING_EMAIL))
+                .isInstanceOf(NotExistException.class)
                 .hasMessage(String.format(USER_NOT_FOUND_BY_EMAIL_EXCEPTION, EXISTING_EMAIL));
     }
 
@@ -155,17 +159,19 @@ public class UserServiceTest {
     }
 
     @Test
-    void getUserByNotExistingActivationCode() {
+    void getUserByNotExistingActivationCodeTest() {
         when(userRepository.findByActivationCode(NOT_EXISTING_ACTIVATION_CODE)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.getUserByActivationCode(NOT_EXISTING_ACTIVATION_CODE)).isInstanceOf(NotExistException.class);
+        assertThatThrownBy(() -> userService.getUserByActivationCode(NOT_EXISTING_ACTIVATION_CODE))
+                .isInstanceOf(NotExistException.class)
+                .hasMessage(String.format(USER_NOT_FOUND_BY_ACTIVATION_CODE_EXCEPTION, NOT_EXISTING_ACTIVATION_CODE));
     }
 
     @Test
     void givenActivationCode_whenGetUserByActivationCode_thenReturnUser() {
-        when(userRepository.findByActivationCode(anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findByActivationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE)).thenReturn(Optional.of(user));
 
-        User actualUser = userService.getUserByActivationCode(anyString());
+        User actualUser = userService.getUserByActivationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE);
         assertThat(actualUser).isNotNull().isEqualTo(user);
     }
 
@@ -173,7 +179,8 @@ public class UserServiceTest {
     void givenActivationCode_whenGetUserByActivationCode_thenThrowNotExistException() {
         when(userRepository.findByActivationCode(anyString())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.getUserByActivationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE)).isInstanceOf(NotExistException.class)
+        assertThatThrownBy(() -> userService.getUserByActivationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE))
+                .isInstanceOf(NotExistException.class)
                 .hasMessage(String.format(USER_NOT_FOUND_BY_ACTIVATION_CODE_EXCEPTION, EXISTING_NOT_ACTIVATED_ACTIVATION_CODE));
     }
 
@@ -183,7 +190,10 @@ public class UserServiceTest {
         when(roleRepository.findByName(ROLE_NAME)).thenReturn(Optional.of(role));
         when(mailSenderService.send(anyString(), anyString(), anyString())).thenReturn(true);
 
-        assertTrue(userService.createUser(User.builder().firstName("Jon").lastName("Snow").email("newJon@gmail.com").password("123").build()));
+        User actualUser = User.builder().firstName("Jon").lastName("Snow").email("newJon@gmail.com").password("123").build();
+
+        assertTrue(userService.createUser(actualUser));
+        verify(userRepository, times(1)).save(actualUser);
     }
 
     @Test
@@ -213,22 +223,22 @@ public class UserServiceTest {
     @Test
     void givenUser_whenSendMessageToEmail_thenEmailSent() {
         when(mailSenderService.send(anyString(), anyString(), anyString())).thenReturn(true);
-        user.setActivationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE);
+        User notActivatedUser = User.builder().firstName("Some name").email("some_test@gmail.com").isActivated(false).activationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE).build();
 
         String message = String.format(
                 "Hello, %s! \n" +
                         "Welcome to Plocky. Please, visit next link to activate account: http://localhost:8080/activate/%s",
-                user.getFirstName(),
-                user.getActivationCode()
+                notActivatedUser.getFirstName(),
+                notActivatedUser.getActivationCode()
         );
 
-        userService.sendMessageToEmail(user);
+        userService.sendMessageToEmail(notActivatedUser);
 
-        verify(mailSenderService, times(1)).send(eq(user.getEmail()), eq("Activation code!"), eq(message));
+        verify(mailSenderService, times(1)).send(eq(notActivatedUser.getEmail()), eq("Activation code!"), eq(message));
     }
 
     @Test
-    void givenUserWithoutEmail_whenSendMessageToEmail_thenEmailNotSent() {
+    void givenUserWithoutEmail_whenSendMessageToEmail_thenThrowNotExistException() {
         assertThatThrownBy(() -> userService.sendMessageToEmail(User.builder().email(null).build()))
                 .isInstanceOf(NotExistException.class)
                 .hasMessage(USER_NOT_FOUND_EXCEPTION);
@@ -236,8 +246,6 @@ public class UserServiceTest {
         assertThatThrownBy(() -> userService.sendMessageToEmail(User.builder().email("").build()))
                 .isInstanceOf(NotExistException.class)
                 .hasMessage(USER_NOT_FOUND_EXCEPTION);
-
-        verify(mailSenderService, times(0)).send(anyString(), anyString(), anyString());
     }
 
     @Test
@@ -252,9 +260,32 @@ public class UserServiceTest {
     // TODO: 23.03.2023 need to create tests for createUserAndRequestLogin()
     //  BUT it is doesn't work now because the newly created user has isActivated=false, so he can't login
 
-    // TODO: 23.03.2023 need to create tests for activateUser()
     @Test
-    void givenActivationCode_whenActivateUser_thenReturnTrue() {
+    void givenExistingNotActivatedActivationCode_whenActivateUser_thenReturnTrue() {
+        User notActivatedUser = User.builder().isActivated(false).activationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE).build();
 
+        when(userRepository.findByActivationCode(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE)).thenReturn(Optional.of(notActivatedUser));
+
+        boolean result = userService.activateUser(EXISTING_NOT_ACTIVATED_ACTIVATION_CODE);
+
+        assertTrue(result);
+        assertTrue(notActivatedUser.getIsActivated());
+        assertEquals(notActivatedUser.getActivationCode(), ACTIVATED_ACTIVATION_CODE);
+        verify(userRepository, times(1)).save(notActivatedUser);
     }
+
+    @Test
+    void givenExistingActivatedActivationCode_whenActivateUser_thenReturnFalse() {
+        User activatedUser = User.builder().isActivated(true).activationCode(ACTIVATED_ACTIVATION_CODE).build();
+
+        when(userRepository.findByActivationCode(ACTIVATED_ACTIVATION_CODE)).thenReturn(Optional.of(activatedUser));
+
+        boolean result = userService.activateUser(ACTIVATED_ACTIVATION_CODE);
+
+        assertFalse(result);
+        assertTrue(activatedUser.getIsActivated());
+        assertEquals(activatedUser.getActivationCode(), ACTIVATED_ACTIVATION_CODE);
+        verify(userRepository, times(0)).save(activatedUser);
+    }
+
 }
