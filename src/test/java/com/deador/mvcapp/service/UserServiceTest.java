@@ -1,9 +1,7 @@
 package com.deador.mvcapp.service;
 
-import com.deador.mvcapp.TestUtils;
 import com.deador.mvcapp.entity.Role;
 import com.deador.mvcapp.entity.User;
-import com.deador.mvcapp.exception.AlreadyExistException;
 import com.deador.mvcapp.exception.NotExistException;
 import com.deador.mvcapp.exception.SendMessageToEmailException;
 import com.deador.mvcapp.exception.UserAuthenticationException;
@@ -24,7 +22,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 

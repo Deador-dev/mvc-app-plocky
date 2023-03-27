@@ -23,6 +23,7 @@ import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
+    private static final String USER_NOT_FOUND_FOR_CREATING_CART = "User not found for creating cart";
     private static final String USER_NOT_FOUND_BY_EMAIL = "User not found by email: %s";
     private static final String CART_NOT_FOUND_BY_USER = "Cart not found by user";
     private final ObjectFactory objectFactory;
@@ -48,6 +49,10 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public boolean createCartForUser(User user) {
+        if (user == null || user.getId() == null) {
+            throw new NotExistException(USER_NOT_FOUND_FOR_CREATING_CART);
+        }
+
         Cart cart = (Cart) objectFactory.createObject(Cart.class);
         cart.setPrice(0.0);
         cart.setQuantity(0);
@@ -138,8 +143,7 @@ public class CartServiceImpl implements CartService {
             return 0;
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (!isAuthenticated()) {
             throw new UserAuthenticationException();
         }
 
@@ -152,5 +156,10 @@ public class CartServiceImpl implements CartService {
         }
 
         return cartRepository.findByUser(user).get().getQuantity();
+    }
+
+    private boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated();
     }
 }

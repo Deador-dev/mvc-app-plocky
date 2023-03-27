@@ -1,13 +1,19 @@
 package com.deador.mvcapp.entity;
 
 import com.deador.mvcapp.entity.dto.marker.Convertible;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product implements Convertible {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,9 @@
 package com.deador.mvcapp.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +11,9 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
